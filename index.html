@@ -606,7 +606,7 @@
 
         console.log("Texto detectado:", textoEscuchado);
 
-        // EVALUACIÓN DE PALABRA CLAVE "JARVIS"
+        // EVALUACIÓN DE PALABRA CLAVE BASE "JARVIS"
         if (textoEscuchado.includes("jarvis")) {
             const prompt = document.getElementById('status-prompt');
             if (prompt) {
@@ -615,40 +615,56 @@
             }
 
             let orden = textoEscuchado.replace("jarvis", "").trim();
-            if (orden === "") orden = "iniciar jarvis";
 
-            // 1. Filtro local de llamadas en el celular
-            let ordenLimpia = orden.toLowerCase();
-            if (ordenLimpia.includes("llama") || ordenLimpia.includes("llamar") || ordenLimpia.includes("marcar")) {
-                let numero = ordenLimpia.replace(/[^0-9+]/g, '');
+            // =========================================================
+            // CASO A: SI CONTIENE "MARK 3" / "MACK 3" / "EN LA PC"
+            // ENVÍA LA ORDEN A LA PC
+            // =========================================================
+            if (orden.includes("mark 3") || orden.includes("mack 3") || orden.includes("mac 3") || orden.includes("en la pc")) {
+                let ordenPC = orden.replace("mark 3", "").replace("mack 3", "").replace("mac 3", "").replace("en la pc", "").trim();
+                if (ordenPC === "") ordenPC = "iniciar jarvis";
+
+                hablarCelular(`Enviando a la PC: ${ordenPC}`);
+
+                fetch(`${API_URL}/actualizar_estado`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        tarea_actual: `Procesando en PC: ${ordenPC}`,
+                        progreso: 50,
+                        comando_pendiente: ordenPC
+                    })
+                });
+                return; // OBLIGATORIO: Detiene para no abrir cosas en el celular
+            }
+
+            // =========================================================
+            // CASO B: ÓRDENES LOCALES PARA EL CELULAR
+            // (NO SE ENVIAN A LA PC)
+            // =========================================================
+
+            // 1. Llamadas Locales
+            if (orden.includes("llama") || orden.includes("llamar") || orden.includes("marcar")) {
+                let numero = orden.replace(/[^0-9+]/g, '');
                 if (numero.length >= 3) {
                     hablarCelular("Iniciando llamada al " + numero);
                     window.open("tel:" + numero, "_self");
-                    return; // Detiene el envío hacia la PC
+                    return;
                 }
             }
 
-            // 2. Control de Vistas / Modales
-            if (ordenLimpia.includes("clima")) abrirVista('modal-clima');
-            else if (ordenLimpia.includes("navegación") || ordenLimpia.includes("mapa")) abrirVista('modal-navegacion');
-            else if (ordenLimpia.includes("música")) abrirVista('modal-musica');
-            else if (ordenLimpia.includes("sistema")) abrirVista('modal-sistema');
-            else if (ordenLimpia.includes("hogar") || ordenLimpia.includes("dispositivos")) abrirVista('modal-hogar');
-            else if (ordenLimpia.includes("configuración")) abrirVista('modal-configuracion');
-            else if (ordenLimpia.includes("cerrar") || ordenLimpia.includes("inicio")) cerrarVista();
-
-            // 3. Confirmación y Envío a la Nube (Render/PC)
-            hablarCelular(`Entendido, ejecutando ${orden}`);
-
-            fetch(`${API_URL}/actualizar_estado`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    tarea_actual: `Procesando: ${orden}`,
-                    progreso: 50,
-                    comando_pendiente: orden
-                })
-            });
+            // 2. Modales / Pantallas en Celular
+            if (orden.includes("clima")) abrirVista('modal-clima');
+            else if (orden.includes("navegación") || orden.includes("mapa")) abrirVista('modal-navegacion');
+            else if (orden.includes("música") || orden.includes("youtube")) abrirVista('modal-musica');
+            else if (orden.includes("sistema")) abrirVista('modal-sistema');
+            else if (orden.includes("hogar") || orden.includes("dispositivos")) abrirVista('modal-hogar');
+            else if (orden.includes("configuración")) abrirVista('modal-configuracion');
+            else if (orden.includes("aplicaciones") || orden.includes("apps")) abrirVista('modal-sistema');
+            else if (orden.includes("cerrar") || orden.includes("inicio")) cerrarVista();
+            else {
+                hablarCelular(`Orden local del celular: ${orden}`);
+            }
         }
     };
 
