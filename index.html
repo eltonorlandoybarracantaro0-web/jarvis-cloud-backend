@@ -612,6 +612,16 @@
                     let orden = textoEscuchado.replace("jarvis", "").trim();
                     if (orden === "") orden = "iniciar jarvis";
 
+                    // Filtro para llamadas locales en el celular
+        if (orden.includes("llama") || orden.includes("llamar") || orden.includes("marcar")) {
+            let numero = orden.replace(/[^0-9+]/g, '');
+            if (numero.length >= 7) {
+                hablarCelular("Iniciando llamada al " + numero);
+                window.location.href = "tel:" + numero;
+                return; // Evita que se envíe a la PC
+            }
+        }
+
                     // Confirmación por voz en el teléfono
                     hablarCelular(`Entendido, ejecutando ${orden}`);
 
