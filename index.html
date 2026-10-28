@@ -584,56 +584,73 @@
         }
     };
 
-    rec.onresult = async (event) => {
-    const totalResultados = event.results.length;
-    const textoEscuchado = event.results[totalResultados - 1][0].transcript.toLowerCase().trim();
+    rec.onresult = (event) => {
+        const totalResultados = event.results.length;
+        const textoEscuchado = event.results[totalResultados - 1][0].transcript.toLowerCase().trim();
 
-    console.log("Texto detectado:", textoEscuchado);
+        console.log("Texto detectado:", textoEscuchado);
 
-    // EVALUACIÓN DE PALABRA CLAVE "JARVIS"
-    if (textoEscuchado.includes("jarvis")) {
-        const prompt = document.getElementById('status-prompt');
-        if (prompt) {
-            prompt.innerText = `Procesando: "${textoEscuchado}"...`;
-            prompt.style.color = "#00ff64";
-        }
-
-        let orden = textoEscuchado.replace("jarvis", "").trim();
-
-        // 1. ÓRDENES PARA LA PC ("Jarvis Mark 3" / "en la PC")
-        if (orden.includes("mark 3") || orden.includes("mack 3") || orden.includes("mac 3") || orden.includes("en la pc")) {
-            let ordenPC = orden.replace("mark 3", "").replace("mack 3", "").replace("mac 3", "").replace("en la pc", "").trim();
-            hablarCelular(`Enviando a la laptop: ${ordenPC}`);
-            fetch(`${API_URL}/actualizar_estado`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ tarea_actual: `Enviado a PC: ${ordenPC}`, progreso: 50, comando_pendiente: ordenPC })
-            });
-            return;
-        }
-
-        // 2. ÓRDENES LOCALES EN EL CELULAR
-        if (orden.includes("llama") || orden.includes("llamar") || orden.includes("marcar")) {
-            let numero = orden.replace(/[^0-9+]/g, '');
-            if (numero.length >= 3) {
-                hablarCelular("Iniciando llamada al " + numero);
-                window.open("tel:" + numero, "_self");
-                return;
+        // EVALUACIÓN DE PALABRA CLAVE BASE "JARVIS"
+        if (textoEscuchado.includes("jarvis")) {
+            const prompt = document.getElementById('status-prompt');
+            if (prompt) {
+                prompt.innerText = `Procesando: "${textoEscuchado}"...`;
+                prompt.style.color = "#00ff64";
             }
-        }
 
-        if (orden.includes("clima")) { abrirVista('modal-clima', 'Mostrando pronóstico del clima'); return; }
-        else if (orden.includes("navegación") || orden.includes("mapa")) { abrirVista('modal-navegacion', 'Abriendo rutas y navegación'); return; }
-        else if (orden.includes("música") || orden.includes("youtube")) { abrirVista('modal-musica', 'Iniciando reproducción de música'); return; }
-        else if (orden.includes("sistema") || orden.includes("aplicaciones")) { abrirVista('modal-sistema', 'Desplegando aplicaciones y sistema'); return; }
-        else if (orden.includes("hogar")) { abrirVista('modal-hogar', 'Abriendo control del hogar'); return; }
-        else if (orden.includes("configuración")) { abrirVista('modal-configuracion', 'Ajustes del sistema'); return; }
-        else if (orden.includes("cerrar") || orden.includes("inicio")) { cerrarVista(); hablarCelular('Volviendo al panel principal'); return; }
+            let orden = textoEscuchado.replace("jarvis", "").trim();
 
-        // 3. CONSULTA DIRECTA A LA IA POR VOZ (GEMINI / CHATGPT)
-        hablarCelular("Consultando con la inteligencia artificial...");
-        try {
-            const res = await fetch(`${API_URL}/actualizar_estado`, {
+            // =========================================================
+            // CASO A: SI CONTIENE "MARK 3" / "MACK 3" / "EN LA PC"
+            // ENVÍA LA ORDEN A LA PC
+            // =========================================================
+            if (orden.includes("mark 3") || orden.includes("mack 3") || orden.includes("mac 3") || orden.includes("en la pc")) {
+                let ordenPC = orden.replace("mark 3", "").replace("mack 3", "").replace("mac 3", "").replace("en la pc", "").trim();
+                if (ordenPC === "") ordenPC = "iniciar jarvis";
+
+                hablarCelular(`Enviando a la PC: ${ordenPC}`);
+
+                fetch(`${API_URL}/actualizar_estado`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        tarea_actual: `Procesando en PC: ${ordenPC}`,
+                        progreso: 50,
+                        comando_pendiente: ordenPC
+                    })
+                });
+                return; // OBLIGATORIO: Detiene para no abrir cosas en el celular
+            }
+
+            // =========================================================
+            // CASO B: ÓRDENES LOCALES PARA EL CELULAR
+            // (NO SE ENVIAN A LA PC)
+            // =========================================================
+
+            // 1. Llamadas Locales
+            if (orden.includes("llama") || orden.includes("llamar") || orden.includes("marcar")) {
+                let numero = orden.replace(/[^0-9+]/g, '');
+                if (numero.length >= 3) {
+                    hablarCelular("Iniciando llamada al " + numero);
+                    window.open("tel:" + numero, "_self");
+                    return;
+                }
+            }
+
+            // 2. Modales / Pantallas en Celular con Respuesta por Voz e IA
+        let ordenLimpia = orden.toLowerCase();
+        if (ordenLimpia.includes("clima")) abrirVista('modal-clima', 'Mostrando el pronóstico del clima');
+        else if (ordenLimpia.includes("navegación") || ordenLimpia.includes("mapa")) abrirVista('modal-navegacion', 'Abriendo mapa y rutas');
+        else if (ordenLimpia.includes("música") || ordenLimpia.includes("youtube")) abrirVista('modal-musica', 'Iniciando reproducción de música');
+        else if (ordenLimpia.includes("sistema")) abrirVista('modal-sistema', 'Desplegando estado del sistema');
+        else if (ordenLimpia.includes("hogar") || ordenLimpia.includes("dispositivos")) abrirVista('modal-hogar', 'Abriendo control del hogar');
+        else if (ordenLimpia.includes("configuración")) abrirVista('modal-configuracion', 'Ajustes del sistema');
+        else if (ordenLimpia.includes("aplicaciones") || ordenLimpia.includes("apps")) abrirVista('modal-sistema', 'Desplegando aplicaciones');
+        else if (ordenLimpia.includes("cerrar") || ordenLimpia.includes("inicio")) cerrarVista();
+        else {
+            // 3. CONSULTA DIRECTA A LA IA (GEMINI) SI NO ES COMANDO LOCAL
+            hablarCelular("Consultando a la inteligencia artificial...");
+            fetch(`${API_URL}/actualizar_estado`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -641,21 +658,29 @@
                     progreso: 50,
                     comando_pendiente: orden
                 })
-            });
-
-            if (res.ok) {
-                const data = await res.json();
+            })
+            .then(res => res.json())
+            .then(data => {
                 let respuesta = data.estado ? data.estado.respuesta_jarvis : null;
                 if (respuesta) {
                     hablarCelular(respuesta);
+                    const prompt = document.getElementById('status-prompt');
                     if (prompt) prompt.innerText = `Jarvis: "${respuesta}"`;
                 }
-            }
-        } catch (e) {
-            hablarCelular("No pude conectarme al núcleo de inteligencia artificial");
+            })
+            .catch(err => {
+                hablarCelular("No pude conectar con la inteligencia artificial");
+            });
         }
     }
 };
+
+    // Reinicio automático continuo
+    rec.onend = () => {
+        if (escuchaActiva) {
+            try { rec.start(); } catch(e) {}
+        }
+    };
 
     rec.onerror = (e) => {
         setTimeout(() => {
@@ -801,7 +826,7 @@ function triggerMic() {
         let modal = document.getElementById(idModal);
         if(modal) modal.classList.add('active');
 
-        // 3. Respuesta por voz unificada para todos los módulos
+        // 3. Respuesta por Voz Unificada para todos los módulos
         if (mensajeVoz) {
             hablarCelular(mensajeVoz);
         }
@@ -818,5 +843,6 @@ function triggerMic() {
         document.querySelectorAll('.jarvis-modal').forEach(m => m.classList.remove('active'));
     }
 </script>
+
 </body>
 </html>
