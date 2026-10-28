@@ -607,26 +607,26 @@
     };
 
     rec.onresult = (event) => {
-        const totalResultados = event.results.length;
-        const textoEscuchado = event.results[totalResultados - 1][0].transcript.toLowerCase().trim();
+            const totalResultados = event.results.length;
+            const textoEscuchado = event.results[totalResultados - 1][0].transcript.toLowerCase().trim();
 
-        console.log("Texto detectado:", textoEscuchado);
+            console.log("Texto detectado:", textoEscuchado);
 
-        // EVALUACIÓN DE PALABRA CLAVE BASE "JARVIS"
-        if (textoEscuchado.includes("jarvis")) {
-            const prompt = document.getElementById('status-prompt');
-            if (prompt) {
-                prompt.innerText = `Procesando: "${textoEscuchado}"...`;
-                prompt.style.color = "#00ff64";
-            }
+            // EVALUACIÓN DE PALABRA CLAVE BASE "JARVIS"
+            if (textoEscuchado.includes("jarvis")) {
+                const prompt = document.getElementById('status-prompt');
+                if (prompt) {
+                    prompt.innerText = `Procesando: "${textoEscuchado}"...`;
+                    prompt.style.color = "#00ff64";
+                }
 
-            let orden = textoEscuchado.replace("jarvis", "").trim();
+                let orden = textoEscuchado.replace("jarvis", "").trim();
 
-            // =========================================================
-            // CASO A: SI CONTIENE "MARK 3" / "MACK 3" / "EN LA PC"
-            // ENVÍA LA ORDEN A LA PC
-            // =========================================================
-            if (orden.includes("mark 3") || orden.includes("mack 3") || orden.includes("mac 3") || orden.includes("en la pc")) {
+                // =========================================================
+                // CASO A: SI CONTIENE "MARK 3" / "MACK 3" / "EN LA PC"
+                // ENVÍA LA ORDEN A LA PC
+                // =========================================================
+                if (orden.includes("mark 3") || orden.includes("mack 3") || orden.includes("mac 3") || orden.includes("en la pc")) {
                     let ordenPC = orden.replace("mark 3", "").replace("mack 3", "").replace("mac 3", "").replace("en la pc", "").trim();
                     if (ordenPC === "") ordenPC = "iniciar jarvis";
 
@@ -641,7 +641,7 @@
                             comando_pendiente: ordenPC
                         })
                     });
-                    return; // Detiene la ejecución aquí si era para la PC
+                    return;
                 }
 
                 // =========================================================
@@ -694,6 +694,8 @@
                         hablarCelular("No pude conectarme con el servidor central, Señor.");
                     });
                 }
+            }
+        };
         else if (ordenLimpia.includes("configuración")) abrirVista('modal-configuracion', 'Ajustes del sistema');
         else if (ordenLimpia.includes("aplicaciones") || ordenLimpia.includes("apps")) abrirVista('modal-sistema', 'Desplegando aplicaciones');
         else if (ordenLimpia.includes("cerrar") || ordenLimpia.includes("inicio")) cerrarVista();
