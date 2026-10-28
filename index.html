@@ -754,67 +754,153 @@ function triggerMic() {
 <!-- MODALES Y FUNCIONALIDAD DE PANTALLAS SECUNDARIAS                  -->
 <!-- ================================================================= -->
 <style>
+    /* Estilo HUD Futurista para Paneles Modales */
     .jarvis-modal {
         display: none;
         position: fixed;
         top: 0; left: 0; width: 100vw; height: 100vh;
-        background: #02050b; z-index: 9999;
-        padding: 20px; overflow-y: auto; flex-direction: column;
+        background: #02050b;
+        background-image: 
+            radial-gradient(circle at 50% 30%, rgba(0, 240, 255, 0.12) 0%, transparent 70%),
+            linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+        background-size: 100% 100%, 20px 20px, 20px 20px;
+        z-index: 9999;
+        padding: 20px;
+        flex-direction: column;
+        justify-content: flex-start;
+        box-shadow: inset 0 0 40px rgba(0, 240, 255, 0.15);
     }
-    .jarvis-modal.active { display: flex; }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(0,240,255,0.3); padding-bottom: 10px; }
-    .modal-header h3 { color: #00f0ff; font-size: 1.1rem; }
-    .close-btn { background: rgba(0,240,255,0.2); border: 1px solid #00f0ff; color: #00f0ff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; }
+    
+    .jarvis-modal.active { 
+        display: flex; 
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgba(0, 240, 255, 0.4);
+        padding-bottom: 12px;
+        box-shadow: 0 4px 15px -5px rgba(0, 240, 255, 0.3);
+    }
+
+    .modal-header h3 {
+        color: #00f0ff;
+        font-size: 1.1rem;
+        letter-spacing: 1.5px;
+        text-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+        text-transform: uppercase;
+    }
+
+    .close-btn {
+        background: rgba(0, 240, 255, 0.1);
+        border: 1px solid #00f0ff;
+        color: #00f0ff;
+        width: 34px; height: 34px;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer;
+        font-weight: bold;
+        box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+        transition: all 0.2s ease;
+    }
+
+    .close-btn:active {
+        background: #00f0ff;
+        color: #000;
+    }
+
+    .hud-card-panel {
+        background: rgba(7, 19, 38, 0.7);
+        border: 1px solid rgba(0, 240, 255, 0.3);
+        border-radius: 12px;
+        padding: 18px;
+        margin-bottom: 12px;
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.08);
+    }
+
+    .hud-grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
 </style>
 
-<!-- Ventanas Emergentes (Modales) -->
+<!-- Panel Clima -->
 <div id="modal-clima" class="jarvis-modal">
-    <div class="modal-header"><h3>CLIMA - LIMA, PERÚ</h3><div class="close-btn" onclick="cerrarVista()">✕</div></div>
-    <div style="text-align:center; padding: 20px;">
-        <h1 style="font-size: 3.5rem; color: #00f0ff;">22°C</h1>
-        <p style="color:#7a9bbd;">Parcialmente Nublado | Máx: 24° Mín: 18°</p>
+    <div class="modal-header">
+        <h3>☁️ CLIMA - LIMA, PERÚ</h3>
+        <div class="close-btn" onclick="cerrarVista()">✕</div>
+    </div>
+    <div class="hud-card-panel" style="text-align: center; padding: 30px 10px;">
+        <h1 style="font-size: 4rem; color: #00f0ff; text-shadow: 0 0 20px #00f0ff; font-weight: 300;">22°C</h1>
+        <p style="color: #7a9bbd; margin-top: 5px; font-size: 0.9rem;">Parcialmente Nublado | Máx: 24° Mín: 18°</p>
     </div>
 </div>
 
+<!-- Panel Navegación -->
 <div id="modal-navegacion" class="jarvis-modal">
-    <div class="modal-header"><h3>NAVEGACIÓN DE RUTA</h3><div class="close-btn" onclick="cerrarVista()">✕</div></div>
-    <div style="background:#071326; border:1px solid #00f0ff; border-radius:12px; padding:20px; text-align:center; margin-bottom:15px;">
-        <p style="color:#00f0ff;">📍 Ruta Activa: Trabajo (18 min - 7.2 km)</p>
+    <div class="modal-header">
+        <h3>📍 NAVEGACIÓN Y RUTAS</h3>
+        <div class="close-btn" onclick="cerrarVista()">✕</div>
     </div>
-    <button onclick="window.open('https://maps.google.com')" style="background:#00f0ff; color:#000; font-weight:bold; padding:15px; border-radius:8px; border:none; width:100%;">ABRIR GOOGLE MAPS</button>
+    <div class="hud-card-panel">
+        <p style="color: #00f0ff; font-weight: bold; margin-bottom: 5px;">📍 Ruta sugerida: Trabajo</p>
+        <p style="color: #7a9bbd; font-size: 0.85rem;">Distancia: 7.2 km | Tiempo estimado: 18 min</p>
+    </div>
+    <button onclick="window.open('https://maps.google.com')" style="background: rgba(0,240,255,0.15); border: 1px solid #00f0ff; color: #00f0ff; font-weight: bold; padding: 15px; border-radius: 10px; width: 100%; box-shadow: 0 0 15px rgba(0,240,255,0.2); cursor: pointer;">
+        ABRIR GOOGLE MAPS
+    </button>
 </div>
 
+<!-- Panel Música -->
 <div id="modal-musica" class="jarvis-modal">
-    <div class="modal-header"><h3>MÚSICA - SPOTIFY</h3><div class="close-btn" onclick="cerrarVista()">✕</div></div>
-    <div style="text-align:center;">
-        <div style="width:160px; height:160px; background:#112233; border:1px solid #00f0ff; border-radius:12px; margin:0 auto 15px auto; display:flex; align-items:center; justify-content:center; font-size:3rem;">🎵</div>
-        <h3>Believer</h3>
-        <p style="color:#7a9bbd;">Imagine Dragons</p>
+    <div class="modal-header">
+        <h3>🎵 REPRODUCTOR DE MÚSICA</h3>
+        <div class="close-btn" onclick="cerrarVista()">✕</div>
+    </div>
+    <div class="hud-card-panel" style="text-align: center;">
+        <div style="width: 120px; height: 120px; border-radius: 50%; border: 2px solid #00f0ff; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; box-shadow: 0 0 25px rgba(0,240,255,0.4);">🎵</div>
+        <h3 style="color: #fff; margin-bottom: 5px;">Reproduciendo en YouTube...</h3>
+        <p style="color: #7a9bbd; font-size: 0.85rem;">Conectado a la red de medios de Jarvis</p>
     </div>
 </div>
 
+<!-- Panel Sistema y Aplicaciones -->
 <div id="modal-sistema" class="jarvis-modal">
-    <div class="modal-header"><h3>CONTROL DEL SISTEMA</h3><div class="close-btn" onclick="cerrarVista()">✕</div></div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-        <div style="background:rgba(0,240,255,0.1); border:1px solid #00f0ff; padding:12px; border-radius:8px;">📶 Wi-Fi: Activado</div>
-        <div style="background:rgba(0,240,255,0.1); border:1px solid #00f0ff; padding:12px; border-radius:8px;">📡 Bluetooth: Activado</div>
-        <div style="background:rgba(0,240,255,0.1); border:1px solid #00f0ff; padding:12px; border-radius:8px;">💡 Linterna: Apagada</div>
-        <div style="background:rgba(0,240,255,0.1); border:1px solid #00f0ff; padding:12px; border-radius:8px;">🔋 Batería: 78%</div>
+    <div class="modal-header">
+        <h3>⚙️ ESTADO DEL SISTEMA</h3>
+        <div class="close-btn" onclick="cerrarVista()">✕</div>
+    </div>
+    <div class="hud-grid-2">
+        <div class="hud-card-panel" style="color: #00f0ff;">📶 Wi-Fi: Activado</div>
+        <div class="hud-card-panel" style="color: #00f0ff;">📡 Bluetooth: Listo</div>
+        <div class="hud-card-panel" style="color: #00ff64;">🔋 Batería: 78%</div>
+        <div class="hud-card-panel" style="color: #00f0ff;">⚡ Núcleo: Online</div>
     </div>
 </div>
 
+<!-- Panel Hogar -->
 <div id="modal-hogar" class="jarvis-modal">
-    <div class="modal-header"><h3>DISPOSITIVOS DEL HOGAR</h3><div class="close-btn" onclick="cerrarVista()">✕</div></div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-        <div style="background:rgba(0,240,255,0.1); border:1px solid #00f0ff; padding:12px; border-radius:8px;">💡 Luces Sala: ON</div>
-        <div style="background:rgba(3,15,30,0.8); border:1px solid rgba(0,240,255,0.2); padding:12px; border-radius:8px;">📺 TV Principal: OFF</div>
+    <div class="modal-header">
+        <h3>🏠 DISPOSITIVOS DEL HOGAR</h3>
+        <div class="close-btn" onclick="cerrarVista()">✕</div>
+    </div>
+    <div class="hud-grid-2">
+        <div class="hud-card-panel" style="color: #00ff64;">💡 Luces Sala: ON</div>
+        <div class="hud-card-panel" style="color: #7a9bbd;">📺 TV Principal: OFF</div>
     </div>
 </div>
 
+<!-- Panel Configuración -->
 <div id="modal-configuracion" class="jarvis-modal">
-    <div class="modal-header"><h3>CONFIGURACIÓN DE JARVIS</h3><div class="close-btn" onclick="cerrarVista()">✕</div></div>
-    <p>Jarvis Mark 3 - Versión 3.0.0</p>
-    <p style="color:#7a9bbd;">Usuario: Elton</p>
+    <div class="modal-header"><h3>📁 CONFIGURACIÓN</h3><div class="close-btn" onclick="cerrarVista()">✕</div></div>
+    <div class="hud-card-panel">
+        <p style="color: #00f0ff;">Jarvis Mark 3 - Versión 3.0.0</p>
+        <p style="color: #7a9bbd; margin-top: 5px;">Usuario registrado: Elton</p>
+    </div>
 </div>
 
 <script>
