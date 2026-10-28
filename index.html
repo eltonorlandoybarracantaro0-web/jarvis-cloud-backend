@@ -610,33 +610,33 @@
                     document.getElementById('status-prompt').style.color = "#00ff64";
 
                     let orden = textoEscuchado.replace("jarvis", "").trim();
-                    if (orden === "") orden = "iniciar jarvis";
+        if (orden === "") orden = "iniciar jarvis";
 
-                    // Filtro para llamadas locales en el celular
+        // Filtro corregido para llamadas locales en el celular
         if (orden.includes("llama") || orden.includes("llamar") || orden.includes("marcar")) {
             let numero = orden.replace(/[^0-9+]/g, '');
-            if (numero.length >= 7) {
+            if (numero.length >= 3) {
                 hablarCelular("Iniciando llamada al " + numero);
-                window.location.href = "tel:" + numero;
-                return; // Evita que se envíe a la PC
+                window.open("tel:" + numero, "_self");
+                return; // Evita enviar la orden a la PC
             }
         }
 
-                    // Confirmación por voz en el teléfono
-                    hablarCelular(`Entendido, ejecutando ${orden}`);
+        // Confirmación por voz en el teléfono
+        hablarCelular(`Entendido, ejecutando ${orden}`);
 
-                    // Envía la orden a la nube
-                    fetch(`${API_URL}/actualizar_estado`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            tarea_actual: `Procesando: ${orden}`,
-                            progreso: 50,
-                            comando_pendiente: orden
-                        })
-                    });
-                }
-            };
+        // Envía la orden a la nube
+        fetch(`${API_URL}/actualizar_estado`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                tarea_actual: `Procesando: ${orden}`,
+                progreso: 50,
+                comando_pendiente: orden
+            })
+        });
+    }
+};
 
             rec.onend = () => {
                 if (escuchaActiva) {
