@@ -7,9 +7,9 @@ app = Flask(__name__)
 CORS(app)
 
 # Configurar la API Key de Gemini desde la variable de entorno
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 if GEMINI_API_KEY:
-    genai.configure(api_key=GEMINI_API_KEY))
+    genai.configure(api_key=GEMINI_API_KEY)
 
 # Configuración de personalidad y criterio propio de JARVIS
 SYSTEM_INSTRUCTION = """
@@ -20,11 +20,6 @@ Tienes autonomía y criterio propio:
 2. Si te pide algo ineficiente, contradictorio o potencialmente peligroso, analiza la situación, exprésale tu desacuerdo de forma respetuosa pero firme, explícale el motivo y sugiérele una alternativa mejor antes de proceder.
 3. Tus respuestas habladas deben ser concisas, claras y directas al punto.
 """
-
-model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash",
-    system_instruction=SYSTEM_INSTRUCTION
-)
 
 estado_sistema = {
     "tarea_actual": "Jarvis en línea y operativo",
@@ -40,14 +35,24 @@ def actualizar_estado():
     
     comando = data.get("comando_pendiente")
     if comando:
-        # Analizar el comando con la IA para obtener la respuesta con criterio
-        try:
-            chat = model.start_chat(history=[])
-            prompt = f"El usuario acaba de decir: '{comando}'. Genera tu respuesta en voz según tu criterio y personalidad."
-            response = chat.send_message(prompt)
-            respuesta_texto = response.text.strip()
-        except Exception as e:
-            respuesta_texto = f"Entendido Jefe, procesando {comando}."
+        respuesta_texto = f"Entendido Jefe, procesando {comando}."
+        
+        # Consultar Gemini si la API Key está disponible
+        if GEMINI_API_KEY:
+            try:
+                model = genai.GenerativeModel(
+                    model_name="gemini-1.5-flash",
+                    system_instruction=SYSTEM_INSTRUCTION
+                )
+                prompt = f"El usuario acaba de decir: '{comando}'. Genera tu respuesta breve en voz según tu criterio y personalidad."
+                response = model.generate_content(prompt)
+                if response and response.text:
+                    respuesta_texto = response.text.strip()
+            except Exception as e:
+                print("Error consultando Gemini:", str(e))
+                respuesta_texto = f"Disculpe Jefe, tuve un contratiempo consultando el núcleo de IA, pero procesaré {comando}."
+        else:
+            respuesta_texto = f"Atención Jefe: Falta configurar la variable GEMINI_API_KEY en Render."
 
         estado_sistema["comando_pendiente"] = comando
         estado_sistema["respuesta_jarvis"] = respuesta_texto
