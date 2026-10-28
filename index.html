@@ -612,13 +612,14 @@
                     let orden = textoEscuchado.replace("jarvis", "").trim();
         if (orden === "") orden = "iniciar jarvis";
 
-        // Filtro corregido para llamadas locales en el celular
-        if (orden.includes("llama") || orden.includes("llamar") || orden.includes("marcar")) {
-            let numero = orden.replace(/[^0-9+]/g, '');
+        // Filtro corregido y flexible para llamadas locales
+        let ordenLimpia = orden.toLowerCase();
+        if (ordenLimpia.includes("llama") || ordenLimpia.includes("llamar") || ordenLimpia.includes("marcar")) {
+            let numero = ordenLimpia.replace(/[^0-9+]/g, ''); // Extrae los dígitos aunque tengan espacios
             if (numero.length >= 3) {
                 hablarCelular("Iniciando llamada al " + numero);
-                window.open("tel:" + numero, "_self");
-                return; // Evita enviar la orden a la PC
+                window.location.href = "tel:" + numero;
+                return; // OBLIGATORIO: Detiene el envío a la nube/PC
             }
         }
 
