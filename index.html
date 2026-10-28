@@ -670,8 +670,10 @@
         else if (ordenLimpia.includes("aplicaciones") || ordenLimpia.includes("apps")) abrirVista('modal-sistema', 'Desplegando aplicaciones');
         else if (ordenLimpia.includes("cerrar") || ordenLimpia.includes("inicio")) cerrarVista();
         else {
-            // 3. CONSULTA DIRECTA A LA IA (GEMINI) SI NO ES COMANDO LOCAL
-            hablarCelular("Consultando a la inteligencia artificial...");
+            // 3. CONSULTA DIRECTA E INMEDIATA A GEMINI
+            const prompt = document.getElementById('status-prompt');
+            if (prompt) prompt.innerText = `Jarvis procesando...`;
+
             fetch(`${API_URL}/actualizar_estado`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -686,12 +688,11 @@
                 let respuesta = data.estado ? data.estado.respuesta_jarvis : null;
                 if (respuesta) {
                     hablarCelular(respuesta);
-                    const prompt = document.getElementById('status-prompt');
                     if (prompt) prompt.innerText = `Jarvis: "${respuesta}"`;
                 }
             })
             .catch(err => {
-                hablarCelular("No pude conectar con la inteligencia artificial");
+                hablarCelular("No pude conectarme con el núcleo principal, Señor.");
             });
         }
     }
