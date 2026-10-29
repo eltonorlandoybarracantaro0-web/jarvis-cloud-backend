@@ -342,41 +342,43 @@
             line-height: 1.1;
         }
 
-        /* Barra Inferior de Navegación Agrandada */
+        /* BARRA INFERIOR FLOTANTE IDÉNTICA A LA FOTO */
         .bottom-nav {
-            width: 100%;
-            height: 60px !important;
-            background: rgba(2, 7, 18, 0.95);
-            border: 1px solid rgba(0, 240, 255, 0.3);
-            border-radius: 16px;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding: 0 10px;
+            width: 100% !important;
+            height: 52px !important;
+            background: rgba(2, 7, 18, 0.95) !important;
+            border-top: 1px solid rgba(0, 240, 255, 0.3) !important;
+            border-radius: 12px 12px 0 0 !important;
+            display: flex !important;
+            justify-content: space-around !important;
+            align-items: center !important;
+            padding: 0 10px !important;
+            margin-top: 6px !important;
         }
 
         .nav-item {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 25%;
-            height: 100%;
-            cursor: pointer;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 25% !important;
+            height: 100% !important;
+            cursor: pointer !important;
         }
 
         .nav-svg {
-            width: 30px !important;
-            height: 30px !important;
-            fill: none;
-            stroke: #527394;
-            stroke-width: 2.2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
+            width: 24px !important;
+            height: 24px !important;
+            fill: none !important;
+            stroke: #3b5a7a !important;
+            stroke-width: 2.2 !important;
+            stroke-linecap: round !important;
+            stroke-linejoin: round !important;
+            transition: stroke 0.2s ease, filter 0.2s ease !important;
         }
 
         .nav-item.active .nav-svg {
-            stroke: #00f0ff;
-            filter: drop-shadow(0 0 8px #00f0ff);
+            stroke: #00f0ff !important;
+            filter: drop-shadow(0 0 8px #00f0ff) !important;
         }
 
         /* Modales de Vistas */
@@ -541,7 +543,7 @@
                 <div class="module-title">Más</div>
                 <div class="module-desc">Herramientas</div>
             </div>
-        </div>
+        </div> <!-- Cierre de .modules-grid -->
 
         <!-- Barra Inferior Exacta a la Foto -->
         <div class="bottom-nav">
@@ -557,8 +559,8 @@
             <div class="nav-item" onclick="abrirVista('modal-configuracion', 'Ajustes y menú')">
                 <svg class="nav-svg" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
             </div>
-        </div>
-    </div>
+        </div> <!-- Cierre de .bottom-nav -->
+    </div> <!-- Cierre de .phone-frame -->
 
     <!-- MODALES DE VISTAS SECUNDARIAS -->
     <div id="modal-clima" class="jarvis-modal">
