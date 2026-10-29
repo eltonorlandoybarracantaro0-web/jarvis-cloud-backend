@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>JARVIS MARK 3 - MOBILE HUD</title>
+    <title>JARVIS MARK 3 - HUD</title>
     <style>
         :root {
             --cyan: #00f0ff;
             --blue: #0066ff;
-            --dark-blue: #030d22;
-            --card-bg: rgba(6, 20, 45, 0.88);
-            --card-border: rgba(0, 240, 255, 0.35);
-            --text-dim: #8baac9;
+            --card-bg: rgba(4, 16, 38, 0.85);
+            --card-border: rgba(0, 240, 255, 0.25);
+            --text-dim: #6c8ea8;
             --green: #00ff64;
         }
 
@@ -19,7 +18,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             user-select: none;
             -webkit-user-select: none;
         }
@@ -27,7 +26,7 @@
         html, body {
             width: 100%;
             height: 100%;
-            background-color: #020919;
+            background-color: #020813;
             color: #ffffff;
             overflow: hidden;
             display: flex;
@@ -39,17 +38,17 @@
             width: 100%;
             max-width: 480px;
             height: 100vh;
-            background-color: #030d22;
+            background-color: #020813;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 10px 12px 55px 12px;
+            padding: 10px 10px 52px 10px;
             position: relative;
             overflow: hidden;
             background-image: 
-                radial-gradient(circle at 50% 30%, rgba(0, 102, 255, 0.35) 0%, transparent 65%),
-                linear-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
+                radial-gradient(circle at 50% 35%, rgba(0, 102, 255, 0.25) 0%, transparent 70%),
+                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
             background-size: 100% 100%, 20px 20px, 20px 20px;
         }
 
@@ -58,8 +57,8 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            z-index: 5;
             width: 100%;
+            z-index: 5;
         }
 
         .header-left {
@@ -73,7 +72,7 @@
             height: 36px;
             border-radius: 50%;
             border: 2px solid var(--cyan);
-            box-shadow: 0 0 10px var(--cyan);
+            box-shadow: 0 0 8px var(--cyan);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -81,32 +80,33 @@
         }
 
         .header-title-box h2 {
-            font-size: 0.85rem;
-            letter-spacing: 1px;
+            font-size: 0.82rem;
+            letter-spacing: 1.2px;
             color: #ffffff;
             font-weight: 800;
         }
 
         .header-title-box p {
-            font-size: 0.58rem;
+            font-size: 0.55rem;
             color: var(--text-dim);
         }
 
         .greeting {
-            font-size: 0.65rem;
+            font-size: 0.62rem;
             color: var(--cyan);
         }
 
         .weather-card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-radius: 10px;
-            padding: 5px 8px;
+            border-radius: 8px;
+            padding: 4px 8px;
             text-align: right;
+            box-shadow: 0 0 8px rgba(0, 240, 255, 0.1);
         }
 
         .temp-main {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 800;
             color: #ffffff;
             display: flex;
@@ -116,50 +116,47 @@
         }
 
         .location-sub {
-            font-size: 0.58rem;
+            font-size: 0.55rem;
             color: var(--cyan);
         }
 
         .weather-desc {
-            font-size: 0.52rem;
+            font-size: 0.5rem;
             color: var(--text-dim);
         }
 
-        /* Reactor Central Escala Correcta */
+        /* Reactor Central Exacto */
         .center-hud-section {
             position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin: 0 auto;
             width: 100%;
         }
 
         .hud-diag-node {
             position: absolute;
-            background: rgba(3, 14, 32, 0.92);
+            background: rgba(4, 16, 38, 0.85);
             border: 1px solid var(--card-border);
-            border-radius: 6px;
-            padding: 4px 7px;
-            font-size: 0.55rem;
+            border-radius: 8px;
+            padding: 5px 8px;
+            font-size: 0.6rem;
             z-index: 10;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.15);
         }
 
-        .node-top-left { top: 0px; left: 0px; }
-        .node-top-right { top: 0px; right: 0px; text-align: right; }
-        .node-bottom-left { bottom: 10px; left: 0px; }
-        .node-bottom-right { bottom: 10px; right: 0px; text-align: right; }
+        .node-top-left { top: 10px; left: 0px; }
+        .node-top-right { top: 10px; right: 0px; text-align: right; }
+        .node-bottom-left { bottom: 25px; left: 0px; }
+        .node-bottom-right { bottom: 25px; right: 0px; text-align: right; }
 
-        .node-title { color: var(--cyan); font-weight: 700; font-size: 0.5rem; }
-        .node-value { color: #ffffff; font-weight: bold; }
+        .node-title { color: var(--cyan); font-weight: 700; font-size: 0.52rem; }
+        .node-value { color: #ffffff; font-weight: bold; margin-top: 1px; }
 
         .hud-container {
             position: relative;
-            width: 220px;
-            height: 220px;
+            width: 210px;
+            height: 210px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -168,20 +165,20 @@
 
         .outer-ring {
             position: absolute;
-            width: 210px;
-            height: 210px;
+            width: 200px;
+            height: 200px;
             border-radius: 50%;
             border: 2px solid transparent;
             border-top: 3px solid var(--cyan);
             border-bottom: 3px solid var(--cyan);
-            box-shadow: 0 0 18px rgba(0, 240, 255, 0.4);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
             animation: rotateClockwise 12s linear infinite;
         }
 
         .dashed-ring {
             position: absolute;
-            width: 170px;
-            height: 170px;
+            width: 165px;
+            height: 165px;
             border-radius: 50%;
             border: 2px dashed rgba(0, 240, 255, 0.6);
             animation: rotateCounter 18s linear infinite;
@@ -193,24 +190,24 @@
             height: 130px;
             border-radius: 50%;
             border: 2px solid var(--cyan);
-            box-shadow: 0 0 22px var(--cyan), inset 0 0 12px var(--cyan);
+            box-shadow: 0 0 20px var(--cyan), inset 0 0 12px var(--cyan);
         }
 
         .globe-core {
             position: absolute;
-            width: 105px;
-            height: 105px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
             background: radial-gradient(circle, rgba(0, 240, 255, 0.35) 0%, rgba(0, 102, 255, 0.85) 75%, transparent 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 0 28px var(--blue);
+            box-shadow: 0 0 25px var(--blue);
         }
 
         .core-title {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             font-weight: 900;
             color: #ffffff;
             letter-spacing: 1.5px;
@@ -218,9 +215,20 @@
         }
 
         .core-sub {
-            font-size: 0.62rem;
+            font-size: 0.6rem;
             font-weight: 800;
             color: var(--cyan);
+        }
+
+        /* Pedestal Base */
+        .pedestal-wrapper {
+            position: relative;
+            width: 180px;
+            height: 25px;
+            margin-top: -15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         /* Micrófono */
@@ -228,7 +236,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 14px;
+            gap: 12px;
             margin-top: 2px;
         }
 
@@ -236,30 +244,30 @@
             display: flex;
             align-items: center;
             gap: 3px;
-            height: 20px;
+            height: 16px;
         }
 
         .bar {
-            width: 3.5px;
+            width: 3px;
             background: var(--cyan);
             border-radius: 2px;
             box-shadow: 0 0 6px var(--cyan);
             animation: wave 1.2s ease-in-out infinite alternate;
         }
 
-        .bar:nth-child(1) { height: 10px; animation-delay: 0.1s; }
-        .bar:nth-child(2) { height: 16px; animation-delay: 0.3s; }
-        .bar:nth-child(3) { height: 20px; animation-delay: 0.5s; }
-        .bar:nth-child(4) { height: 12px; animation-delay: 0.2s; }
-        .bar:nth-child(5) { height: 17px; animation-delay: 0.4s; }
+        .bar:nth-child(1) { height: 8px; animation-delay: 0.1s; }
+        .bar:nth-child(2) { height: 14px; animation-delay: 0.3s; }
+        .bar:nth-child(3) { height: 16px; animation-delay: 0.5s; }
+        .bar:nth-child(4) { height: 10px; animation-delay: 0.2s; }
+        .bar:nth-child(5) { height: 13px; animation-delay: 0.4s; }
 
         .mic-center-btn {
-            width: 46px;
-            height: 46px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             background: radial-gradient(circle, var(--cyan) 0%, var(--blue) 100%);
             border: 2px solid #ffffff;
-            box-shadow: 0 0 16px var(--cyan);
+            box-shadow: 0 0 14px var(--cyan);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -268,10 +276,10 @@
 
         .prompt-sub {
             text-align: center;
-            font-size: 0.68rem;
+            font-size: 0.65rem;
             color: var(--text-dim);
-            margin-top: 3px;
-            margin-bottom: 3px;
+            margin-top: 4px;
+            margin-bottom: 4px;
         }
 
         /* Cuadrícula de 8 Módulos */
@@ -279,7 +287,7 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             grid-template-rows: repeat(2, auto);
-            gap: 6px;
+            gap: 8px;
             width: 100%;
             padding: 2px 0;
             margin-bottom: 2px;
@@ -288,52 +296,53 @@
         .module-card {
             background: rgba(3, 12, 28, 0.88);
             border: 1px solid rgba(0, 240, 255, 0.3);
-            border-radius: 10px;
-            padding: 8px 3px;
+            border-radius: 12px;
+            padding: 9px 3px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
             cursor: pointer;
+            box-shadow: 0 0 8px rgba(0, 240, 255, 0.08);
         }
 
         .module-svg {
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             fill: none;
             stroke: #00f0ff;
             stroke-width: 2;
             margin-bottom: 3px;
+            filter: drop-shadow(0 0 4px rgba(0, 240, 255, 0.6));
         }
 
         .module-title {
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             font-weight: 700;
             color: #ffffff;
         }
 
         .module-desc {
-            font-size: 0.52rem;
+            font-size: 0.5rem;
             color: #6c8ea8;
+            margin-top: 1px;
         }
 
-        /* BARRA INFERIOR FIJA CENTRADA */
+        /* Barra Inferior Integrada en el Borde */
         .bottom-nav {
-            position: fixed;
+            position: absolute;
             bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
+            left: 0;
             width: 100%;
-            max-width: 480px;
-            height: 50px;
-            background: #020712;
-            border-top: 1px solid rgba(0, 240, 255, 0.35);
+            height: 48px;
+            background: rgba(2, 7, 18, 0.95);
+            border-top: 1px solid rgba(0, 240, 255, 0.25);
             display: flex;
             justify-content: space-around;
             align-items: center;
             padding: 0 10px;
-            z-index: 99999;
+            z-index: 99;
         }
 
         .nav-item {
@@ -346,16 +355,18 @@
         }
 
         .nav-svg {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             fill: none;
-            stroke: #406080;
+            stroke: #527394;
             stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
         .nav-item.active .nav-svg {
             stroke: #00f0ff;
-            filter: drop-shadow(0 0 8px #00f0ff);
+            filter: drop-shadow(0 0 6px #00f0ff);
         }
 
         /* Modales */
@@ -363,7 +374,7 @@
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #020919; z-index: 999999;
+            background: #020919; z-index: 9999;
             padding: 20px; overflow-y: auto; flex-direction: column;
             border: 1px solid rgba(0, 240, 255, 0.4);
         }
@@ -405,31 +416,23 @@
         <!-- Central Reactor Area -->
         <div class="center-hud-section">
             <div class="hud-diag-node node-top-left">
-                <div>
-                    <div class="node-title">IA</div>
-                    <div class="node-value" style="color: var(--cyan);">Activada</div>
-                </div>
+                <div class="node-title">🧠 IA</div>
+                <div class="node-value" style="color: var(--cyan);">Activada</div>
             </div>
 
             <div class="hud-diag-node node-top-right">
-                <div>
-                    <div class="node-title">BATERÍA</div>
-                    <div class="node-value" style="color: var(--green);">78%</div>
-                </div>
+                <div class="node-title">🔋 BATERÍA</div>
+                <div class="node-value" style="color: var(--green);">78%</div>
             </div>
 
             <div class="hud-diag-node node-bottom-left">
-                <div>
-                    <div class="node-title">DISPOSITIVO</div>
-                    <div class="node-value">Edge 40</div>
-                </div>
+                <div class="node-title">📱 DISPOSITIVO</div>
+                <div class="node-value">Edge 40</div>
             </div>
 
             <div class="hud-diag-node node-bottom-right">
-                <div>
-                    <div class="node-title">RED</div>
-                    <div class="node-value" style="color: var(--cyan);">Wi-Fi</div>
-                </div>
+                <div class="node-title">📡 RED</div>
+                <div class="node-value" style="color: var(--cyan);">Wi-Fi</div>
             </div>
 
             <div class="hud-container" onclick="triggerMic()">
@@ -441,6 +444,7 @@
                     <div class="core-sub">MARK 3</div>
                 </div>
             </div>
+            <div class="pedestal-wrapper"></div>
         </div>
 
         <!-- Voice Section -->
@@ -450,7 +454,7 @@
                     <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
                 </div>
                 <div class="mic-center-btn" onclick="triggerMic()">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#ffffff">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#ffffff">
                         <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
                         <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
                     </svg>
@@ -459,7 +463,7 @@
                     <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
                 </div>
             </div>
-            <div class="prompt-sub" id="status-prompt">Escuchando en segundo plano...</div>
+            <div class="prompt-sub" id="status-prompt">"Habla o escribe un comando..."</div>
         </div>
 
         <!-- Cuadrícula de 8 Módulos -->
@@ -467,53 +471,53 @@
             <div class="module-card" onclick="abrirVista('modal-clima', 'Mostrando clima')">
                 <svg class="module-svg" viewBox="0 0 24 24"><path d="M17.5 19 9 19C6.2 19 4 16.8 4 14 4 11.5 5.8 9.4 8.2 9 9 5.6 12.1 3 16 3c4.4 0 8 3.6 8 8 0 .4 0 .8-.1 1.2C22.6 12.8 24 14.7 24 17c0 2.8-2.2 5-5 5z"/></svg>
                 <div class="module-title">Clima</div>
-                <div class="module-desc">Temperatura</div>
+                <div class="module-desc">Temperatura y pronóstico</div>
             </div>
 
             <div class="module-card" onclick="abrirVista('modal-navegacion', 'Abriendo navegación')">
                 <svg class="module-svg" viewBox="0 0 24 24"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>
                 <div class="module-title">Navegación</div>
-                <div class="module-desc">Rutas</div>
+                <div class="module-desc">Rutas y ubicación</div>
             </div>
 
             <div class="module-card" onclick="abrirVista('modal-musica', 'Música')">
                 <svg class="module-svg" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
                 <div class="module-title">Música</div>
-                <div class="module-desc">Favorita</div>
+                <div class="module-desc">Tu música favorita</div>
             </div>
 
             <div class="module-card" onclick="hablarCelular('Abrir marcador'); window.open('tel:', '_self')">
                 <svg class="module-svg" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                 <div class="module-title">Llamadas</div>
-                <div class="module-desc">Contactos</div>
+                <div class="module-desc">Contactos y marcación</div>
             </div>
 
             <div class="module-card" onclick="abrirVista('modal-hogar', 'Hogar')">
                 <svg class="module-svg" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                 <div class="module-title">Hogar</div>
-                <div class="module-desc">Luces/TV</div>
+                <div class="module-desc">Luces, TV, cámaras</div>
             </div>
 
             <div class="module-card" onclick="abrirVista('modal-sistema', 'Aplicaciones')">
                 <svg class="module-svg" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                 <div class="module-title">Aplicaciones</div>
-                <div class="module-desc">Todas</div>
+                <div class="module-desc">Todas tus apps</div>
             </div>
 
             <div class="module-card" onclick="abrirVista('modal-sistema', 'Sistema')">
                 <svg class="module-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                 <div class="module-title">Sistema</div>
-                <div class="module-desc">Ajustes</div>
+                <div class="module-desc">Configuración</div>
             </div>
 
             <div class="module-card" onclick="abrirVista('modal-configuracion', 'Más')">
                 <svg class="module-svg" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
                 <div class="module-title">Más</div>
-                <div class="module-desc">Opciones</div>
+                <div class="module-desc">Herramientas</div>
             </div>
         </div>
 
-        <!-- BARRA INFERIOR FIJA -->
+        <!-- Barra Inferior -->
         <div class="bottom-nav">
             <div class="nav-item active" onclick="cerrarVista()">
                 <svg class="nav-svg" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
