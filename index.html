@@ -607,227 +607,205 @@
         <p style="color:#7a9bbd;">Usuario: Elton</p>
     </div>
 
-    <!-- SCRIPT ÚNICO Y SIN REPETICIONES -->
-    <script>
-        const API_URL = "https://jarvis-cloud-backend-k8e4.onrender.com";
-        let rec = null;
-        let escuchaActiva = false;
-        let ultimaTareaHablada = "";
+    <!-- SCRIPT ÚNICO, UNIFICADO Y PROTEGIDO -->
+<script>
+    const API_URL = "https://jarvis-cloud-backend-k8e4.onrender.com";
+    let rec = null;
+    let escuchaActiva = false;
+    let ultimaTareaHablada = "";
 
-        // SÍNTESIS DE VOZ
-        // SÍNTESIS DE VOZ CONTROLADA (Evita bucles)
-function hablarCelular(texto) {
-    if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
+    // 1. SÍNTESIS DE VOZ CONTROLADA (Evita que el micrófono se auto-escuche)
+    function hablarCelular(texto) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
 
-        // Pausar micrófono mientras habla
-        if (rec && escuchaActiva) {
-            try { rec.abort(); } catch(e) {}
-        }
-
-        const ut = new SpeechSynthesisUtterance(texto);
-        ut.lang = 'es-ES';
-        ut.rate = 1.0;
-        ut.pitch = 1.0;
-
-        // Reanudar micrófono al terminar de hablar
-        ut.onend = () => {
-            if (escuchaActiva && rec) {
-                try { rec.start(); } catch(e) {}
+            // Pausar micrófono mientras Jarvis habla
+            if (rec && escuchaActiva) {
+                try { rec.abort(); } catch(e) {}
             }
-        };
 
-        window.speechSynthesis.speak(ut);
+            const ut = new SpeechSynthesisUtterance(texto);
+            ut.lang = 'es-ES';
+            ut.rate = 1.0;
+            ut.pitch = 1.0;
+
+            // Reanudar micrófono al terminar de hablar
+            ut.onend = () => {
+                if (escuchaActiva && rec) {
+                    try { rec.start(); } catch(e) {}
+                }
+            };
+
+            window.speechSynthesis.speak(ut);
+        }
     }
-}
 
-// CONTROL DE VISTAS Y MODALES
-function abrirVista(idModal, mensajeVoz) {
-    document.querySelectorAll('.jarvis-modal').forEach(m => m.classList.remove('active'));
-    const modal = document.getElementById(idModal);
-    if (modal) {
-        modal.classList.add('active');
-        if (mensajeVoz) hablarCelular(mensajeVoz);
-    }
-
-    if (idModal === 'modal-musica') {
-        setTimeout(() => {
-            window.open('https://www.youtube.com', '_blank');
-        }, 2200);
-    }
-}
-
-        function cerrarVista() {
-            document.querySelectorAll('.jarvis-modal').forEach(m => m.classList.remove('active'));
-            hablarCelular("Regresando a la pantalla principal, Jefe");
+    // 2. CONTROL DE VISTAS Y MODALES
+    function abrirVista(idModal, mensajeVoz) {
+        document.querySelectorAll('.jarvis-modal').forEach(m => m.classList.remove('active'));
+        const modal = document.getElementById(idModal);
+        if (modal) {
+            modal.classList.add('active');
+            if (mensajeVoz) hablarCelular(mensajeVoz);
         }
 
-        function cambiarTab(elemento, nombreTab) {
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            elemento.classList.add('active');
-            const prompt = document.getElementById('status-prompt');
-            if (prompt) {
-                prompt.innerText = `Vista: ${nombreTab}`;
-                prompt.style.color = "#00f0ff";
-            }
-        }
-
-        // INICIALIZACIÓN AUTOMÁTICA Y SALUDO
-        window.addEventListener('load', () => {
+        if (idModal === 'modal-musica') {
             setTimeout(() => {
-                hablarCelular("Sistemas en línea. Jarvis Mark 3 listo para sus órdenes, Jefe.");
-                iniciarMicrofono();
-            }, 1000);
-        });
+                window.open('https://www.youtube.com', '_blank');
+            }, 2200);
+        }
+    }
 
-        // RECONOCIMIENTO DE VOZ CONTINUO
-        function iniciarMicrofono() {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SpeechRecognition) {
+    function cerrarVista() {
+        document.querySelectorAll('.jarvis-modal').forEach(m => m.classList.remove('active'));
+        hablarCelular("Regresando a la pantalla principal, Jefe");
+    }
+
+    function cambiarTab(elemento, nombreTab) {
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        elemento.classList.add('active');
+        const prompt = document.getElementById('status-prompt');
+        if (prompt) {
+            prompt.innerText = `Vista: ${nombreTab}`;
+            prompt.style.color = "#00f0ff";
+        }
+    }
+
+    // 3. INICIALIZACIÓN AUTOMÁTICA
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            hablarCelular("Sistemas en línea. Jarvis Mark 3 listo para sus órdenes, Jefe.");
+            iniciarMicrofono();
+        }, 1000);
+    });
+
+    // 4. MICRÓFONO CONTINUO Y EVALUACIÓN DE ÓRDENES
+    function iniciarMicrofono() {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            const prompt = document.getElementById('status-prompt');
+            if (prompt) prompt.innerText = "Navegador no soporta micrófono por voz";
+            return;
+        }
+
+        if (!rec) {
+            rec = new SpeechRecognition();
+            rec.lang = 'es-ES';
+            rec.continuous = true;
+            rec.interimResults = false;
+
+            rec.onstart = () => {
+                escuchaActiva = true;
                 const prompt = document.getElementById('status-prompt');
-                if (prompt) prompt.innerText = "Navegador no soporta micrófono por voz";
-                return;
-            }
+                if (prompt) {
+                    prompt.innerText = 'Escuchando en segundo plano...';
+                    prompt.style.color = '#00f0ff';
+                }
+            };
 
-            if (!rec) {
-                rec = new SpeechRecognition();
-                rec.lang = 'es-ES';
-                rec.continuous = true;
-                rec.interimResults = false;
+            rec.onerror = (e) => {
+                console.log("Error de micrófono:", e);
+            };
 
-                rec.onstart = () => {
-                    escuchaActiva = true;
-                    const prompt = document.getElementById('status-prompt');
-                    if (prompt) {
-                        prompt.innerText = 'Escuchando en segundo plano...';
-                        prompt.style.color = '#00f0ff';
-                    }
-                };
+            rec.onend = () => {
+                if (escuchaActiva && !window.speechSynthesis.speaking) {
+                    try { rec.start(); } catch (e) {}
+                }
+            };
 
-                rec.onerror = (e) => {
-                    console.log("Error de micrófono:", e);
-                };
+            rec.onresult = (event) => {
+                const totalResultados = event.results.length;
+                const textoEscuchado = event.results[totalResultados - 1][0].transcript.toLowerCase().trim();
 
-                rec.onend = () => {
-                    if (escuchaActiva) {
-                        try { rec.start(); } catch (e) {}
-                    }
-                };
+                console.log("Texto detectado:", textoEscuchado);
+                if (!textoEscuchado) return;
 
-                rec.onresult = (event) => {
-                    const totalResultados = event.results.length;
-                    const textoEscuchado = event.results[totalResultados - 1][0].transcript.toLowerCase().trim();
+                const prompt = document.getElementById('status-prompt');
+                if (prompt) {
+                    prompt.innerText = `Procesando: "${textoEscuchado}"...`;
+                    prompt.style.color = "#00ff64";
+                }
 
-                    console.log("Texto detectado:", textoEscuchado);
-                    if (!textoEscuchado) return;
+                let orden = textoEscuchado.replace(/^jarvis\s*/, "").trim();
+                if (orden === "") orden = textoEscuchado;
 
-                    const prompt = document.getElementById('status-prompt');
-                    if (prompt) {
-                        prompt.innerText = `Procesando: "${textoEscuchado}"...`;
-                        prompt.style.color = "#00ff64";
-                    }
+                // ÓRDENES EXCLUSIVAS PARA LA PC
+                if (orden.startsWith("mark 3") || orden.startsWith("mack 3") || orden.includes("en la pc")) {
+                    let ordenPC = orden.replace("mark 3", "").replace("mack 3", "").replace("en la pc", "").trim();
+                    if (ordenPC === "") ordenPC = "iniciar jarvis";
 
-                    let orden = textoEscuchado.replace(/^jarvis\s*/, "").trim();
-                    if (orden === "") orden = textoEscuchado;
+                    hablarCelular(`Enviando orden a la PC: ${ordenPC}`);
 
-                    // ÓRDENES EXCLUSIVAS DE LAPTOP
-                    if (orden.includes("mark 3") || orden.includes("mack 3") || orden.includes("en la pc")) {
-                        let ordenPC = orden.replace("mark 3", "").replace("mack 3", "").replace("en la pc", "").trim();
-                        if (ordenPC === "") ordenPC = "iniciar jarvis";
+                    fetch(`${API_URL}/actualizar_estado`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            tarea_actual: `Procesando en PC: ${ordenPC}`,
+                            progreso: 50,
+                            comando_pendiente: ordenPC
+                        })
+                    }).catch(err => console.log(err));
+                    return;
+                }
 
-                        hablarCelular(`Enviando orden a la PC: ${ordenPC}`);
-
-                        fetch(`${API_URL}/actualizar_estado`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                tarea_actual: `Procesando en PC: ${ordenPC}`,
-                                progreso: 50,
-                                comando_pendiente: ordenPC
-                            })
-                        }).catch(err => console.log(err));
+                // ÓRDENES LOCALES EN EL MÓVIL
+                let ordenLimpia = orden.toLowerCase();
+                if (ordenLimpia.includes("llama") || ordenLimpia.includes("llamar") || ordenLimpia.includes("marcar")) {
+                    let numero = ordenLimpia.replace(/[^0-9+]/g, '');
+                    if (numero.length >= 3) {
+                        hablarCelular("Iniciando llamada al " + numero);
+                        window.open("tel:" + numero, "_self");
                         return;
                     }
-
-                    // ÓRDENES LOCALES Y MODALES
-                    let ordenLimpia = orden.toLowerCase();
-                    if (ordenLimpia.includes("llama") || ordenLimpia.includes("llamar") || ordenLimpia.includes("marcar")) {
-                        let numero = ordenLimpia.replace(/[^0-9+]/g, '');
-                        if (numero.length >= 3) {
-                            hablarCelular("Iniciando llamada al " + numero);
-                            window.open("tel:" + numero, "_self");
-                            return;
-                        }
-                    }
-
-                    if (ordenLimpia.includes("clima")) abrirVista('modal-clima', 'Mostrando el pronóstico del clima');
-                    else if (ordenLimpia.includes("navegación") || ordenLimpia.includes("mapa")) abrirVista('modal-navegacion', 'Abriendo mapa y rutas');
-                    else if (ordenLimpia.includes("música") || ordenLimpia.includes("youtube")) abrirVista('modal-musica', 'Iniciando reproducción de música');
-                    else if (ordenLimpia.includes("hogar") || ordenLimpia.includes("dispositivos")) abrirVista('modal-hogar', 'Abriendo control del hogar');
-                    else if (ordenLimpia.includes("configuración") || ordenLimpia.includes("sistema")) abrirVista('modal-sistema', 'Desplegando ajustes del sistema');
-                    else if (ordenLimpia.includes("aplicaciones") || ordenLimpia.includes("apps")) abrirVista('modal-sistema', 'Desplegando aplicaciones');
-                    else if (ordenLimpia.includes("cerrar") || ordenLimpia.includes("inicio")) cerrarVista();
-                    else {
-                        // CONSULTA IA GEMINI
-                        if (prompt) prompt.innerText = `Jarvis procesando...`;
-
-                        fetch(`${API_URL}/actualizar_estado`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                tarea_actual: `Pregunta IA: ${orden}`,
-                                progreso: 50,
-                                comando_pendiente: orden
-                            })
-                        })
-                        .then(res => res.json())
-                        .then(data => {
-                            let respuesta = data.estado ? data.estado.respuesta_jarvis : null;
-                            if (respuesta) {
-                                hablarCelular(respuesta);
-                                if (prompt) prompt.innerText = `Jarvis: "${respuesta}"`;
-                            } else {
-                                hablarCelular("No recibí respuesta del núcleo de IA, Jefe.");
-                            }
-                        })
-                        .catch(err => {
-                            hablarCelular("Error de conexión con el servidor en Render, Señor.");
-                        });
-                    }
-                };
-            }
-
-            try { rec.start(); } catch (e) {}
-        }
-
-        function triggerMic() {
-            if (!escuchaActiva) {
-                iniciarMicrofono();
-            } else {
-                hablarCelular("Micrófono de Jarvis activo, le escucho Jefe.");
-            }
-        }
-
-        // SINCRONIZACIÓN CON EL BACKEND
-        async function sincronizarAPI() {
-            try {
-                const res = await fetch(`${API_URL}/obtener_estado`);
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.tarea_actual && data.tarea_actual !== "Sin tareas activas en PC") {
-                        const prompt = document.getElementById('status-prompt');
-                        if (prompt) prompt.innerText = `PC: ${data.tarea_actual} (${data.progreso}%)`;
-                        
-                        if (data.progreso === 100 && data.tarea_actual !== ultimaTareaHablada) {
-                            ultimaTareaHablada = data.tarea_actual;
-                            hablarCelular(data.tarea_actual);
-                        }
-                    }
                 }
-            } catch (e) {}
+
+                if (ordenLimpia.includes("clima")) abrirVista('modal-clima', 'Mostrando el pronóstico del clima');
+                else if (ordenLimpia.includes("navegación") || ordenLimpia.includes("mapa")) abrirVista('modal-navegacion', 'Abriendo mapa y rutas');
+                else if (ordenLimpia.includes("música") || ordenLimpia.includes("youtube")) abrirVista('modal-musica', 'Iniciando reproducción de música');
+                else if (ordenLimpia.includes("hogar") || ordenLimpia.includes("dispositivos")) abrirVista('modal-hogar', 'Abriendo control del hogar');
+                else if (ordenLimpia.includes("configuración") || ordenLimpia.includes("sistema")) abrirVista('modal-sistema', 'Desplegando ajustes del sistema');
+                else if (ordenLimpia.includes("aplicaciones") || ordenLimpia.includes("apps")) abrirVista('modal-sistema', 'Desplegando aplicaciones');
+                else if (ordenLimpia.includes("cerrar") || ordenLimpia.includes("inicio")) cerrarVista();
+                else {
+                    // CONSULTA A GEMINI IA
+                    if (prompt) prompt.innerText = `Jarvis procesando...`;
+
+                    fetch(`${API_URL}/actualizar_estado`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            tarea_actual: `Pregunta IA: ${orden}`,
+                            progreso: 50,
+                            comando_pendiente: orden
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        let respuesta = data.estado ? data.estado.respuesta_jarvis : null;
+                        if (respuesta) {
+                            hablarCelular(respuesta);
+                            if (prompt) prompt.innerText = `Jarvis: "${respuesta}"`;
+                        } else {
+                            hablarCelular("No recibí respuesta del núcleo de IA, Jefe.");
+                        }
+                    })
+                    .catch(err => {
+                        hablarCelular("Error de conexión con el servidor en Render, Señor.");
+                    });
+                }
+            };
         }
 
-        setInterval(sincronizarAPI, 2500);
-    </script>
+        try { rec.start(); } catch (e) {}
+    }
+
+    function triggerMic() {
+        if (!escuchaActiva) {
+            iniciarMicrofono();
+        } else {
+            hablarCelular("Micrófono de Jarvis activo, le escucho Jefe.");
+        }
+    }
+</script>
 </body>
 </html>
