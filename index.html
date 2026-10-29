@@ -631,25 +631,52 @@
 
                 if (textoEscuchado.includes("jarvis")) {
                     const prompt = document.getElementById('status-prompt');
-                    if (prompt) {
-                        prompt.innerText = `Procesando: "${textoEscuchado}"...`;
-                        prompt.style.color = "#00ff64";
-                    }
-
                     let orden = textoEscuchado.replace("jarvis", "").trim();
                     if (orden === "") orden = "iniciar jarvis";
 
-                    hablarCelular(`Entendido, ejecutando ${orden}`);
+                    // DETECCIÓN DE ORDEN REMOTA PARA LA PC
+                    if (orden.includes("mark 3") || orden.includes("en la pc") || orden.includes("en la laptop")) {
+                        let ordenPC = orden.replace("en mark 3", "").replace("mark 3", "").replace("en la pc", "").replace("en la laptop", "").trim();
+                        
+                        if (prompt) {
+                            prompt.innerText = `PC Remota: "${ordenPC}"...`;
+                            prompt.style.color = "#00ff64";
+                        }
+                        hablarCelular(`Enviando orden a Jarvis Mark 3: ${ordenPC}`);
 
-                    fetch(`${API_URL}/actualizar_estado`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            tarea_actual: `Procesando: ${orden}`,
-                            progreso: 50,
-                            comando_pendiente: orden
-                        })
-                    });
+                        fetch(`${API_URL}/actualizar_estado`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                tarea_actual: `Procesando en PC: ${ordenPC}`,
+                                progreso: 50,
+                                comando_pendiente: ordenPC
+                            })
+                        });
+                    } 
+                    // EJECUCIÓN LOCAL EXCLUSIVA DEL CELULAR
+                    else {
+                        if (prompt) {
+                            prompt.innerText = `Celular: "${orden}"...`;
+                            prompt.style.color = "#00f0ff";
+                        }
+
+                        if (orden.includes("youtube") || orden.includes("música")) {
+                            hablarCelular("Abriendo YouTube en el celular");
+                            window.open("https://music.youtube.com", "_blank");
+                        } else if (orden.includes("clima")) {
+                            hablarCelular("Abriendo módulo de clima");
+                            abrirVista('modal-clima');
+                        } else if (orden.includes("navegador") || orden.includes("mapa")) {
+                            hablarCelular("Abriendo mapa en el celular");
+                            window.open("https://maps.google.com", "_blank");
+                        } else if (orden.includes("sistema") || orden.includes("aplicaciones")) {
+                            hablarCelular("Abriendo panel de aplicaciones");
+                            abrirVista('modal-sistema');
+                        } else {
+                            hablarCelular(`Ejecutando en celular: ${orden}`);
+                        }
+                    }
                 }
             };
 
