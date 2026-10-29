@@ -577,7 +577,16 @@
         function hablarCelular(texto) {
             if (!texto) return;
 
-            // Pausar micrófono mientras suena el audio para liberar el canal de sonido en Android
+            // 1. Pitido sintético de prueba física por hardware en el celular
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                osc.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.15);
+            } catch(e) {}
+
+            // 2. Intento de reproducción por elemento Audio
             if (rec && escuchaActiva) {
                 try { rec.abort(); } catch(e) {}
             }
@@ -585,14 +594,8 @@
             const urlAudio = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(texto)}&tl=es&client=tw-ob`;
             const audio = new Audio(urlAudio);
 
-            audio.play().catch(() => {
-                // Respaldo por síntesis local si falla la red
-                if ('speechSynthesis' in window) {
-                    window.speechSynthesis.cancel();
-                    const ut = new SpeechSynthesisUtterance(texto);
-                    ut.lang = 'es-ES';
-                    window.speechSynthesis.speak(ut);
-                }
+            audio.play().catch(err => {
+                console.error("Error al reproducir audio nativo:", err);
             });
 
             audio.onended = () => {
