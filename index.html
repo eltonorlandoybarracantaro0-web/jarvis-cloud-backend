@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>JARVIS MARK 3 - HUD MOBILE</title>
+    <title>JARVIS MARK 3 - MOBILE HUD</title>
     <style>
         :root {
             --cyan: #00f0ff;
             --blue: #0066ff;
-            --card-bg: rgba(4, 16, 38, 0.88);
+            --dark-blue: #030d22;
+            --bg-outer: #01040a;
+            --card-bg: rgba(10, 25, 50, 0.85);
             --card-border: rgba(0, 240, 255, 0.35);
-            --text-dim: #6c8ea8;
+            --text-dim: #8baac9;
             --green: #00ff64;
         }
 
@@ -26,7 +28,7 @@
         html, body {
             width: 100%;
             height: 100%;
-            background-color: #020813;
+            background-color: var(--bg-outer);
             color: #ffffff;
             overflow: hidden;
             display: flex;
@@ -34,33 +36,30 @@
             align-items: center;
         }
 
-        /* Contenedor Principal Ajustado al Celular */
         .phone-frame {
             width: 100%;
             max-width: 480px;
             height: 100vh;
-            background-color: #020813;
+            background-color: #020712;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 10px 10px 55px 10px;
+            padding: 12px 10px 56px 10px; /* Padding inferior reservado para la barra fija */
             position: relative;
             overflow: hidden;
             background-image: 
-                radial-gradient(circle at 50% 35%, rgba(0, 102, 255, 0.25) 0%, transparent 70%),
-                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+                radial-gradient(circle at 50% 32%, rgba(0, 102, 255, 0.35) 0%, transparent 65%),
+                linear-gradient(rgba(0, 240, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
             background-size: 100% 100%, 20px 20px, 20px 20px;
         }
 
-        /* Header Superior */
+        /* Header */
         .top-row {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            width: 100%;
             z-index: 5;
-            margin-top: 2px;
         }
 
         .header-left {
@@ -70,11 +69,11 @@
         }
 
         .jarvis-logo-icon {
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             border: 2px solid var(--cyan);
-            box-shadow: 0 0 8px var(--cyan);
+            box-shadow: 0 0 10px var(--cyan);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -82,33 +81,35 @@
         }
 
         .header-title-box h2 {
-            font-size: 0.82rem;
+            font-size: 0.88rem;
             letter-spacing: 1.2px;
             color: #ffffff;
             font-weight: 800;
         }
 
         .header-title-box p {
-            font-size: 0.55rem;
+            font-size: 0.58rem;
             color: var(--text-dim);
+            letter-spacing: 1px;
         }
 
         .greeting {
-            font-size: 0.62rem;
+            font-size: 0.65rem;
             color: var(--cyan);
+            margin-top: 1px;
         }
 
         .weather-card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-radius: 8px;
-            padding: 4px 8px;
+            border-radius: 10px;
+            padding: 5px 8px;
             text-align: right;
-            box-shadow: 0 0 8px rgba(0, 240, 255, 0.1);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.15);
         }
 
         .temp-main {
-            font-size: 0.95rem;
+            font-size: 1rem;
             font-weight: 800;
             color: #ffffff;
             display: flex;
@@ -118,44 +119,48 @@
         }
 
         .location-sub {
-            font-size: 0.55rem;
+            font-size: 0.58rem;
             color: var(--cyan);
+            font-weight: 600;
         }
 
         .weather-desc {
-            font-size: 0.5rem;
+            font-size: 0.52rem;
             color: var(--text-dim);
         }
 
-        /* Reactor Central Compacto */
+        /* Central HUD Section - Escala Reajustada para Móvil */
         .center-hud-section {
             position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 100%;
             margin: auto 0;
         }
 
         .hud-diag-node {
             position: absolute;
-            background: rgba(4, 16, 38, 0.88);
+            background: rgba(4, 16, 38, 0.9);
             border: 1px solid var(--card-border);
             border-radius: 8px;
             padding: 4px 7px;
             font-size: 0.58rem;
-            z-index: 10;
             box-shadow: 0 0 8px rgba(0, 240, 255, 0.15);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .node-top-left { top: 0px; left: 0px; }
         .node-top-right { top: 0px; right: 0px; text-align: right; }
-        .node-bottom-left { bottom: 15px; left: 0px; }
-        .node-bottom-right { bottom: 15px; right: 0px; text-align: right; }
+        .node-bottom-left { bottom: 20px; left: 0px; }
+        .node-bottom-right { bottom: 20px; right: 0px; text-align: right; }
 
-        .node-title { color: var(--cyan); font-weight: 700; font-size: 0.5rem; }
+        .node-title { color: var(--cyan); font-weight: 700; font-size: 0.52rem; }
         .node-value { color: #ffffff; font-weight: bold; margin-top: 1px; }
 
+        /* Arc Reactor Compacto */
         .hud-container {
             position: relative;
             width: 175px;
@@ -174,7 +179,7 @@
             border: 2px solid transparent;
             border-top: 3px solid var(--cyan);
             border-bottom: 3px solid var(--cyan);
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+            box-shadow: 0 0 18px rgba(0, 240, 255, 0.4);
             animation: rotateClockwise 12s linear infinite;
         }
 
@@ -193,50 +198,51 @@
             height: 105px;
             border-radius: 50%;
             border: 2px solid var(--cyan);
-            box-shadow: 0 0 15px var(--cyan), inset 0 0 8px var(--cyan);
+            box-shadow: 0 0 20px var(--cyan), inset 0 0 12px var(--cyan);
         }
 
         .globe-core {
             position: absolute;
-            width: 82px;
-            height: 82px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(0, 240, 255, 0.35) 0%, rgba(0, 102, 255, 0.85) 75%, transparent 100%);
+            background: radial-gradient(circle, rgba(0, 240, 255, 0.3) 0%, rgba(0, 102, 255, 0.8) 75%, transparent 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 0 20px var(--blue);
+            box-shadow: 0 0 25px var(--blue);
         }
 
         .core-title {
             font-size: 1rem;
             font-weight: 900;
             color: #ffffff;
-            letter-spacing: 1.2px;
-            text-shadow: 0 0 8px var(--cyan);
+            letter-spacing: 1.5px;
+            text-shadow: 0 0 10px var(--cyan);
         }
 
         .core-sub {
             font-size: 0.55rem;
             font-weight: 800;
             color: var(--cyan);
+            letter-spacing: 1px;
         }
 
-        /* Sección del Micrófono */
+        /* Voice Control */
         .mic-section {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 12px;
-            margin-top: 6px;
+            margin-top: 2px;
         }
 
         .equalizer {
             display: flex;
             align-items: center;
             gap: 3px;
-            height: 16px;
+            height: 18px;
         }
 
         .bar {
@@ -249,75 +255,81 @@
 
         .bar:nth-child(1) { height: 8px; animation-delay: 0.1s; }
         .bar:nth-child(2) { height: 14px; animation-delay: 0.3s; }
-        .bar:nth-child(3) { height: 16px; animation-delay: 0.5s; }
+        .bar:nth-child(3) { height: 18px; animation-delay: 0.5s; }
         .bar:nth-child(4) { height: 10px; animation-delay: 0.2s; }
-        .bar:nth-child(5) { height: 13px; animation-delay: 0.4s; }
+        .bar:nth-child(5) { height: 14px; animation-delay: 0.4s; }
 
         .mic-center-btn {
-            width: 38px;
-            height: 38px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: radial-gradient(circle, var(--cyan) 0%, var(--blue) 100%);
             border: 2px solid #ffffff;
-            box-shadow: 0 0 12px var(--cyan);
+            box-shadow: 0 0 16px var(--cyan);
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
         }
 
+        .mic-center-btn:active { transform: scale(0.92); }
+
         .prompt-sub {
             text-align: center;
-            font-size: 0.62rem;
+            font-size: 0.65rem;
             color: var(--text-dim);
             margin-top: 3px;
-            margin-bottom: 2px;
+            margin-bottom: 4px;
         }
 
-        /* Cuadrícula de 8 Módulos Compacta */
+        /* Modules Grid */
         .modules-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: repeat(2, auto);
             gap: 6px;
-            width: 100%;
             margin-bottom: 2px;
         }
 
         .module-card {
-            background: rgba(3, 12, 28, 0.88);
-            border: 1px solid rgba(0, 240, 255, 0.3);
-            border-radius: 10px;
-            padding: 8px 3px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 6px 2px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             text-align: center;
             cursor: pointer;
-            box-shadow: 0 0 8px rgba(0, 240, 255, 0.08);
+            transition: all 0.2s ease;
+        }
+
+        .module-card:active {
+            background: rgba(0, 240, 255, 0.25);
+            transform: scale(0.95);
         }
 
         .module-svg {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             fill: none;
-            stroke: #00f0ff;
+            stroke: var(--cyan);
             stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
             margin-bottom: 2px;
-            filter: drop-shadow(0 0 4px rgba(0, 240, 255, 0.6));
         }
 
         .module-title {
-            font-size: 0.65rem;
+            font-size: 0.62rem;
             font-weight: 700;
             color: #ffffff;
         }
 
         .module-desc {
             font-size: 0.48rem;
-            color: #6c8ea8;
+            color: var(--text-dim);
             margin-top: 1px;
+            line-height: 1.1;
         }
 
         /* BARRA INFERIOR FIJA PERMANENTE */
@@ -328,7 +340,7 @@
             width: 100vw;
             height: 48px;
             background: #020712;
-            border-top: 1px solid rgba(0, 240, 255, 0.35);
+            border-top: 1px solid var(--card-border);
             display: flex;
             justify-content: space-around;
             align-items: center;
@@ -338,38 +350,27 @@
 
         .nav-item {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            width: 25%;
-            height: 100%;
+            gap: 2px;
+            color: var(--text-dim);
+            font-size: 0.58rem;
             cursor: pointer;
+            width: 25%;
+        }
+
+        .nav-item.active {
+            color: var(--cyan);
+            font-weight: bold;
         }
 
         .nav-svg {
-            width: 22px;
-            height: 22px;
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
             fill: none;
-            stroke: #527394;
             stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
         }
-
-        .nav-item.active .nav-svg {
-            stroke: #00f0ff;
-            filter: drop-shadow(0 0 6px #00f0ff);
-        }
-
-        /* Modales */
-        .jarvis-modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #020919; z-index: 999999;
-            padding: 20px; overflow-y: auto; flex-direction: column;
-            border: 1px solid rgba(0, 240, 255, 0.4);
-        }
-        .jarvis-modal.active { display: flex; }
 
         @keyframes rotateClockwise { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes rotateCounter { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
@@ -379,11 +380,11 @@
 <body>
 
     <div class="phone-frame">
-        <!-- Header -->
+        <!-- Top Header -->
         <div class="top-row">
             <div class="header-left">
                 <div class="jarvis-logo-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2.5">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2.5">
                         <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
                         <polyline points="2 17 12 22 22 17"></polyline>
                         <polyline points="2 12 12 17 22 12"></polyline>
@@ -395,35 +396,49 @@
                     <div class="greeting">Buenos días, Elton.</div>
                 </div>
             </div>
-            <div class="weather-card" onclick="abrirVista('modal-clima', 'Mostrando el pronóstico del clima')">
+            <div class="weather-card" onclick="abrirModulo('Clima')">
                 <div class="temp-main">
-                    22°C ☀️
+                    22°C 
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffaa00" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
                 </div>
                 <div class="location-sub">Lima, Perú</div>
                 <div class="weather-desc">Parcialmente nublado</div>
+                <div style="font-size: 0.52rem; color: var(--text-dim); margin-top: 1px;">Máx. 24° | Mín. 18°</div>
             </div>
         </div>
 
         <!-- Central Reactor Area -->
         <div class="center-hud-section">
             <div class="hud-diag-node node-top-left">
-                <div class="node-title">🧠 IA</div>
-                <div class="node-value" style="color: var(--cyan);">Activada</div>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/></svg>
+                <div>
+                    <div class="node-title">IA</div>
+                    <div class="node-value" style="color: var(--cyan);">Activada</div>
+                </div>
             </div>
 
             <div class="hud-diag-node node-top-right">
-                <div class="node-title">🔋 BATERÍA</div>
-                <div class="node-value" style="color: var(--green);">78%</div>
+                <div>
+                    <div class="node-title">BATERÍA</div>
+                    <div class="node-value" style="color: var(--green);">78%</div>
+                </div>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00ff64" stroke-width="2"><rect x="1" y="6" width="18" height="12" rx="2"/><line x1="23" y1="10" x2="23" y2="14"/></svg>
             </div>
 
             <div class="hud-diag-node node-bottom-left">
-                <div class="node-title">📱 DISPOSITIVO</div>
-                <div class="node-value">Edge 40</div>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/></svg>
+                <div>
+                    <div class="node-title">DISPOSITIVO</div>
+                    <div class="node-value">Edge 40</div>
+                </div>
             </div>
 
             <div class="hud-diag-node node-bottom-right">
-                <div class="node-title">📡 RED</div>
-                <div class="node-value" style="color: var(--cyan);">Wi-Fi</div>
+                <div>
+                    <div class="node-title">RED</div>
+                    <div class="node-value" style="color: var(--cyan);">Wi-Fi</div>
+                </div>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
             </div>
 
             <div class="hud-container" onclick="triggerMic()">
@@ -437,14 +452,14 @@
             </div>
         </div>
 
-        <!-- Voice Section -->
+        <!-- Voice Control -->
         <div>
             <div class="mic-section">
                 <div class="equalizer">
                     <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
                 </div>
                 <div class="mic-center-btn" onclick="triggerMic()">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#ffffff">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#ffffff">
                         <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
                         <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
                     </svg>
@@ -456,175 +471,184 @@
             <div class="prompt-sub" id="status-prompt">"Habla o escribe un comando..."</div>
         </div>
 
-        <!-- Cuadrícula de 8 Módulos -->
+        <!-- 8 Modules Grid -->
         <div class="modules-grid">
-            <div class="module-card" onclick="abrirVista('modal-clima', 'Mostrando clima')">
+            <div class="module-card" onclick="abrirModulo('Clima')">
                 <svg class="module-svg" viewBox="0 0 24 24"><path d="M17.5 19 9 19C6.2 19 4 16.8 4 14 4 11.5 5.8 9.4 8.2 9 9 5.6 12.1 3 16 3c4.4 0 8 3.6 8 8 0 .4 0 .8-.1 1.2C22.6 12.8 24 14.7 24 17c0 2.8-2.2 5-5 5z"/></svg>
                 <div class="module-title">Clima</div>
                 <div class="module-desc">Temperatura y pronóstico</div>
             </div>
-
-            <div class="module-card" onclick="abrirVista('modal-navegacion', 'Abriendo navegación')">
+            <div class="module-card" onclick="abrirModulo('Navegación')">
                 <svg class="module-svg" viewBox="0 0 24 24"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>
                 <div class="module-title">Navegación</div>
                 <div class="module-desc">Rutas y ubicación</div>
             </div>
-
-            <div class="module-card" onclick="abrirVista('modal-musica', 'Música')">
+            <div class="module-card" onclick="abrirModulo('Música')">
                 <svg class="module-svg" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
                 <div class="module-title">Música</div>
                 <div class="module-desc">Tu música favorita</div>
             </div>
-
-            <div class="module-card" onclick="hablarCelular('Abrir marcador'); window.open('tel:', '_self')">
+            <div class="module-card" onclick="abrirModulo('Llamadas')">
                 <svg class="module-svg" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                 <div class="module-title">Llamadas</div>
                 <div class="module-desc">Contactos y marcación</div>
             </div>
 
-            <div class="module-card" onclick="abrirVista('modal-hogar', 'Hogar')">
+            <div class="module-card" onclick="abrirModulo('Hogar')">
                 <svg class="module-svg" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                 <div class="module-title">Hogar</div>
                 <div class="module-desc">Luces, TV, cámaras</div>
             </div>
-
-            <div class="module-card" onclick="abrirVista('modal-sistema', 'Aplicaciones')">
+            <div class="module-card" onclick="abrirModulo('Aplicaciones')">
                 <svg class="module-svg" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                 <div class="module-title">Aplicaciones</div>
                 <div class="module-desc">Todas tus apps</div>
             </div>
-
-            <div class="module-card" onclick="abrirVista('modal-sistema', 'Sistema')">
+            <div class="module-card" onclick="abrirModulo('Sistema')">
                 <svg class="module-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                 <div class="module-title">Sistema</div>
                 <div class="module-desc">Configuración</div>
             </div>
-
-            <div class="module-card" onclick="abrirVista('modal-configuracion', 'Más')">
+            <div class="module-card" onclick="abrirModulo('Más')">
                 <svg class="module-svg" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
                 <div class="module-title">Más</div>
                 <div class="module-desc">Herramientas</div>
             </div>
         </div>
 
-        <!-- Barra Inferior Fija -->
+        <!-- Bottom Navigation -->
         <div class="bottom-nav">
-            <div class="nav-item active" onclick="cerrarVista()">
+            <div class="nav-item active" onclick="cambiarTab(this, 'Inicio')">
                 <svg class="nav-svg" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                <div>Inicio</div>
             </div>
-            <div class="nav-item" onclick="abrirVista('modal-sistema', 'Historial')">
+            <div class="nav-item" onclick="cambiarTab(this, 'Historial')">
                 <svg class="nav-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <div>Historial</div>
             </div>
-            <div class="nav-item" onclick="abrirVista('modal-configuracion', 'Favoritos')">
+            <div class="nav-item" onclick="cambiarTab(this, 'Favoritos')">
                 <svg class="nav-svg" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <div>Favoritos</div>
             </div>
-            <div class="nav-item" onclick="abrirVista('modal-configuracion', 'Menú')">
+            <div class="nav-item" onclick="cambiarTab(this, 'Ajustes')">
                 <svg class="nav-svg" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                <div>Ajustes</div>
             </div>
         </div>
-    </div>
-
-    <!-- Modales -->
-    <div id="modal-clima" class="jarvis-modal">
-        <div class="modal-header"><h3>CLIMA</h3><div class="close-btn" onclick="cerrarVista()">✕</div></div>
-        <div style="text-align:center; padding: 20px;">
-            <h1 style="font-size: 3.5rem; color: #00f0ff;">22°C</h1>
-            <p style="color:#7a9bbd;">Parcialmente Nublado</p>
-        </div>
-    </div>
-
-    <div id="modal-navegacion" class="jarvis-modal">
-        <div class="modal-header"><h3>NAVEGACIÓN</h3><div class="close-btn" onclick="cerrarVista()">✕</div></div>
-        <button onclick="window.open('https://maps.google.com', '_self')" style="background:#00f0ff; color:#000; font-weight:bold; padding:15px; border-radius:8px; border:none; width:100%;">MAPAS</button>
-    </div>
-
-    <div id="modal-musica" class="jarvis-modal">
-        <div class="modal-header"><h3>MÚSICA</h3><div class="close-btn" onclick="cerrarVista()">✕</div></div>
-        <p style="text-align:center;">Abriendo servicio de música...</p>
-    </div>
-
-    <div id="modal-sistema" class="jarvis-modal">
-        <div class="modal-header"><h3>SISTEMA</h3><div class="close-btn" onclick="cerrarVista()">✕</div></div>
-        <p>Wi-Fi / Bluetooth Activo</p>
-    </div>
-
-    <div id="modal-hogar" class="jarvis-modal">
-        <div class="modal-header"><h3>HOGAR</h3><div class="close-btn" onclick="cerrarVista()">✕</div></div>
-        <p>Dispositivos Conectados</p>
-    </div>
-
-    <div id="modal-configuracion" class="jarvis-modal">
-        <div class="modal-header"><h3>AJUSTES</h3><div class="close-btn" onclick="cerrarVista()">✕</div></div>
-        <p>Jarvis Mark 3 Cloud</p>
     </div>
 
     <script>
         const API_URL = "https://jarvis-cloud-backend-k8e4.onrender.com";
-        let rec = null;
+
+        let rec;
         let escuchaActiva = false;
 
-        function hablarCelular(texto) {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-                if (rec && escuchaActiva) { try { rec.abort(); } catch(e) {} }
-                const ut = new SpeechSynthesisUtterance(texto);
-                ut.lang = 'es-ES';
-                ut.onend = () => { if (escuchaActiva && rec) { try { rec.start(); } catch(e) {} } };
-                window.speechSynthesis.speak(ut);
-            }
-        }
-
-        function abrirVista(idModal, mensajeVoz) {
-            document.querySelectorAll('.jarvis-modal').forEach(m => m.classList.remove('active'));
-            const modal = document.getElementById(idModal);
-            if (modal) {
-                modal.classList.add('active');
-                if (mensajeVoz) hablarCelular(mensajeVoz);
-            }
-            if (idModal === 'modal-musica') {
-                setTimeout(() => { window.open('https://www.youtube.com', '_blank'); }, 2000);
-            }
-        }
-
-        function cerrarVista() {
-            document.querySelectorAll('.jarvis-modal').forEach(m => m.classList.remove('active'));
-            hablarCelular("Pantalla principal, Jefe");
-        }
-
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                hablarCelular("Sistemas listos, Jefe.");
-                iniciarMicrofono();
-            }, 1000);
-        });
-
-        function iniciarMicrofono() {
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SpeechRecognition) return;
+            rec = new SpeechRecognition();
+            rec.lang = 'es-ES';
+            rec.continuous = true;
+            rec.interimResults = false;
 
-            if (!rec) {
-                rec = new SpeechRecognition();
-                rec.lang = 'es-ES';
-                rec.continuous = true;
-                rec.interimResults = false;
+            rec.onstart = () => {
+                escuchaActiva = true;
+                const prompt = document.getElementById('status-prompt');
+                prompt.innerText = 'Escuchando... Di "Jarvis" seguido de tu orden';
+                prompt.style.color = "#00f0ff";
+            };
 
-                rec.onstart = () => { escuchaActiva = true; };
-                rec.onend = () => { if (escuchaActiva && !window.speechSynthesis.speaking) try { rec.start(); } catch (e) {} };
-                rec.onresult = (event) => {
-                    const textoEscuchado = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
-                    if (!textoEscuchado) return;
-                    if (textoEscuchado.includes("clima")) abrirVista('modal-clima', 'Mostrando clima');
-                    else if (textoEscuchado.includes("música")) abrirVista('modal-musica', 'Música');
-                    else if (textoEscuchado.includes("cerrar")) cerrarVista();
-                };
-            }
-            try { rec.start(); } catch (e) {}
+            rec.onresult = (event) => {
+                const totalResultados = event.results.length;
+                const textoEscuchado = event.results[totalResultados - 1][0].transcript.toLowerCase().trim();
+                
+                console.log("Texto detectado:", textoEscuchado);
+
+                if (textoEscuchado.includes("jarvis")) {
+                    document.getElementById('status-prompt').innerText = `Procesando: "${textoEscuchado}"...`;
+                    document.getElementById('status-prompt').style.color = "#00ff64";
+
+                    let orden = textoEscuchado.replace("jarvis", "").trim();
+                    if (orden === "") orden = "iniciar jarvis";
+
+                    fetch(`${API_URL}/actualizar_estado`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            tarea_actual: `Procesando: ${orden}`,
+                            progreso: 50,
+                            comando_pendiente: orden
+                        })
+                    });
+                }
+            };
+
+            rec.onend = () => {
+                if (escuchaActiva) {
+                    try { rec.start(); } catch(e) {}
+                }
+            };
+
+            rec.onerror = (e) => {
+                console.log("Error de reconocimiento:", e);
+                setTimeout(() => {
+                    if (escuchaActiva) { try { rec.start(); } catch(err) {} }
+                }, 1000);
+            };
         }
 
         function triggerMic() {
-            if (!escuchaActiva) iniciarMicrofono();
-            else hablarCelular("Micrófono activo, le escucho.");
+            if (rec) {
+                escuchaActiva = true;
+                try {
+                    rec.start();
+                } catch(e) {
+                    console.log("El micrófono ya está activo");
+                }
+            } else {
+                document.getElementById('status-prompt').innerText = "Voz no soportada en navegador";
+            }
         }
+
+        function abrirModulo(nombreModulo) {
+            const prompt = document.getElementById('status-prompt');
+            prompt.innerText = `Ejecutando: ${nombreModulo}...`;
+            prompt.style.color = "#00ff64";
+
+            fetch(`${API_URL}/actualizar_estado`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    tarea_actual: `Módulo seleccionado: ${nombreModulo}`,
+                    progreso: 100,
+                    comando_pendiente: nombreModulo === 'Navegación' ? 'abrir navegador' : nombreModulo === 'Música' ? 'abrir youtube' : `abrir ${nombreModulo.toLowerCase()}`
+                })
+            });
+        }
+
+        function cambiarTab(elemento, nombreTab) {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            elemento.classList.add('active');
+            document.getElementById('status-prompt').innerText = `Vista: ${nombreTab}`;
+            document.getElementById('status-prompt').style.color = "#00f0ff";
+        }
+
+        async function sincronizarAPI() {
+            try {
+                const res = await fetch(`${API_URL}/obtener_estado`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if(data.tarea_actual && data.tarea_actual !== "Sin tareas activas en PC") {
+                        document.getElementById('status-prompt').innerText = `PC: ${data.tarea_actual} (${data.progreso}%)`;
+                    }
+                }
+            } catch (e) {}
+        }
+
+        setInterval(sincronizarAPI, 2500);
+
+        window.onload = () => {
+            setTimeout(triggerMic, 1000);
+        };
     </script>
 </body>
 </html>
