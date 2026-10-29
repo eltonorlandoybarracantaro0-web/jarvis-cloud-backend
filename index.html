@@ -36,18 +36,16 @@
             align-items: center;
         }
 
-        /* Contenedor adaptado a la pantalla real visible del celular */
         .phone-frame {
-            width: 100%;
-            max-width: 480px;
-            height: 100dvh !important; /* Alto dinámico exacto de la pantalla táctil */
+            width: 100vw;
+            height: 100vh;
             background-color: #020712;
             display: flex;
             flex-direction: column;
-            justify-content: space-between !important;
-            padding: 18px 10px 58px 10px !important; /* Libera espacio arriba y abajo */
+            justify-content: space-between;
+            padding: 16px 14px 10px 14px;
             position: relative;
-            overflow: hidden !important;
+            overflow: hidden;
             background-image: 
                 radial-gradient(circle at 50% 32%, rgba(0, 102, 255, 0.35) 0%, transparent 65%),
                 linear-gradient(rgba(0, 240, 255, 0.04) 1px, transparent 1px),
@@ -55,27 +53,26 @@
             background-size: 100% 100%, 20px 20px, 20px 20px;
         }
 
-        /* Header separado del borde de Chrome */
+        /* Header */
         .top-row {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             z-index: 5;
-            margin-top: 6px !important;
         }
 
         .header-left {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .jarvis-logo-icon {
-            width: 36px;
-            height: 36px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             border: 2px solid var(--cyan);
-            box-shadow: 0 0 10px var(--cyan);
+            box-shadow: 0 0 12px var(--cyan);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -83,35 +80,35 @@
         }
 
         .header-title-box h2 {
-            font-size: 0.85rem;
-            letter-spacing: 1.2px;
+            font-size: 0.95rem;
+            letter-spacing: 1.5px;
             color: #ffffff;
             font-weight: 800;
         }
 
         .header-title-box p {
-            font-size: 0.55rem;
+            font-size: 0.62rem;
             color: var(--text-dim);
             letter-spacing: 1px;
         }
 
         .greeting {
-            font-size: 0.62rem;
+            font-size: 0.72rem;
             color: var(--cyan);
-            margin-top: 1px;
+            margin-top: 2px;
         }
 
         .weather-card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-radius: 10px;
-            padding: 4px 8px;
+            border-radius: 12px;
+            padding: 6px 10px;
             text-align: right;
-            box-shadow: 0 0 10px rgba(0, 240, 255, 0.15);
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.15);
         }
 
         .temp-main {
-            font-size: 0.95rem;
+            font-size: 1.15rem;
             font-weight: 800;
             color: #ffffff;
             display: flex;
@@ -121,23 +118,23 @@
         }
 
         .location-sub {
-            font-size: 0.55rem;
+            font-size: 0.62rem;
             color: var(--cyan);
             font-weight: 600;
         }
 
         .weather-desc {
-            font-size: 0.50rem;
+            font-size: 0.58rem;
             color: var(--text-dim);
         }
 
-        /* Central HUD Section Compacto */
+        /* Central HUD Section */
         .center-hud-section {
             position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin: 2px 0 !important;
+            margin: -5px 0;
         }
 
         .hud-diag-node {
@@ -145,28 +142,28 @@
             background: rgba(4, 16, 38, 0.9);
             border: 1px solid var(--card-border);
             border-radius: 8px;
-            padding: 4px 7px;
-            font-size: 0.58rem;
-            box-shadow: 0 0 8px rgba(0, 240, 255, 0.15);
+            padding: 5px 8px;
+            font-size: 0.62rem;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.15);
             z-index: 10;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
         }
 
-        .node-top-left { top: -5px; left: 0px; }
-        .node-top-right { top: -5px; right: 0px; text-align: right; }
-        .node-bottom-left { bottom: 15px; left: 0px; }
-        .node-bottom-right { bottom: 15px; right: 0px; text-align: right; }
+        .node-top-left { top: 10px; left: 0px; }
+        .node-top-right { top: 10px; right: 0px; text-align: right; }
+        .node-bottom-left { bottom: 45px; left: 0px; }
+        .node-bottom-right { bottom: 45px; right: 0px; text-align: right; }
 
-        .node-title { color: var(--cyan); font-weight: 700; font-size: 0.52rem; }
+        .node-title { color: var(--cyan); font-weight: 700; font-size: 0.58rem; }
         .node-value { color: #ffffff; font-weight: bold; margin-top: 1px; }
 
-        /* Arc Reactor Compacto */
+        /* Arc Reactor */
         .hud-container {
             position: relative;
-            width: 165px !important;
-            height: 165px !important;
+            width: 230px;
+            height: 230px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -175,20 +172,20 @@
 
         .outer-ring {
             position: absolute;
-            width: 155px !important;
-            height: 155px !important;
+            width: 220px;
+            height: 220px;
             border-radius: 50%;
             border: 2px solid transparent;
             border-top: 3px solid var(--cyan);
             border-bottom: 3px solid var(--cyan);
-            box-shadow: 0 0 16px rgba(0, 240, 255, 0.4);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.5);
             animation: rotateClockwise 12s linear infinite;
         }
 
         .dashed-ring {
             position: absolute;
-            width: 125px !important;
-            height: 125px !important;
+            width: 185px;
+            height: 185px;
             border-radius: 50%;
             border: 2px dashed rgba(0, 240, 255, 0.6);
             animation: rotateCounter 18s linear infinite;
@@ -196,39 +193,70 @@
 
         .inner-glow-ring {
             position: absolute;
-            width: 95px !important;
-            height: 95px !important;
+            width: 145px;
+            height: 145px;
             border-radius: 50%;
-            border: 2px solid var(--cyan);
-            box-shadow: 0 0 18px var(--cyan), inset 0 0 10px var(--cyan);
+            border: 3px solid var(--cyan);
+            box-shadow: 0 0 30px var(--cyan), inset 0 0 18px var(--cyan);
         }
 
         .globe-core {
             position: absolute;
-            width: 75px !important;
-            height: 75px !important;
+            width: 115px;
+            height: 115px;
             border-radius: 50%;
             background: radial-gradient(circle, rgba(0, 240, 255, 0.3) 0%, rgba(0, 102, 255, 0.8) 75%, transparent 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 0 22px var(--blue);
+            box-shadow: 0 0 35px var(--blue);
         }
 
         .core-title {
-            font-size: 0.95rem;
+            font-size: 1.3rem;
             font-weight: 900;
             color: #ffffff;
-            letter-spacing: 1.2px;
-            text-shadow: 0 0 8px var(--cyan);
+            letter-spacing: 2.5px;
+            text-shadow: 0 0 12px var(--cyan);
         }
 
         .core-sub {
-            font-size: 0.52rem;
+            font-size: 0.7rem;
             font-weight: 800;
             color: var(--cyan);
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+        }
+
+        /* Pedestal */
+        .pedestal-wrapper {
+            position: relative;
+            width: 180px;
+            height: 30px;
+            margin-top: -20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pedestal-ellipse {
+            position: absolute;
+            width: 160px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid var(--cyan);
+            box-shadow: 0 0 25px var(--cyan);
+            transform: rotateX(75deg);
+        }
+
+        .light-beam {
+            position: absolute;
+            bottom: 12px;
+            width: 120px;
+            height: 50px;
+            background: linear-gradient(to top, rgba(0, 240, 255, 0.3), transparent);
+            clip-path: polygon(20% 100%, 80% 100%, 100% 0, 0 0);
+            pointer-events: none;
         }
 
         /* Voice Control */
@@ -236,7 +264,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 15px;
             margin-top: 2px;
         }
 
@@ -244,100 +272,105 @@
             display: flex;
             align-items: center;
             gap: 3px;
-            height: 16px;
+            height: 22px;
         }
 
         .bar {
             width: 3px;
             background: var(--cyan);
             border-radius: 2px;
-            box-shadow: 0 0 6px var(--cyan);
+            box-shadow: 0 0 8px var(--cyan);
             animation: wave 1.2s ease-in-out infinite alternate;
         }
 
         .bar:nth-child(1) { height: 8px; animation-delay: 0.1s; }
-        .bar:nth-child(2) { height: 14px; animation-delay: 0.3s; }
-        .bar:nth-child(3) { height: 16px; animation-delay: 0.5s; }
-        .bar:nth-child(4) { height: 10px; animation-delay: 0.2s; }
-        .bar:nth-child(5) { height: 13px; animation-delay: 0.4s; }
+        .bar:nth-child(2) { height: 16px; animation-delay: 0.3s; }
+        .bar:nth-child(3) { height: 22px; animation-delay: 0.5s; }
+        .bar:nth-child(4) { height: 12px; animation-delay: 0.2s; }
+        .bar:nth-child(5) { height: 18px; animation-delay: 0.4s; }
 
         .mic-center-btn {
-            width: 38px;
-            height: 38px;
+            width: 46px;
+            height: 46px;
             border-radius: 50%;
             background: radial-gradient(circle, var(--cyan) 0%, var(--blue) 100%);
             border: 2px solid #ffffff;
-            box-shadow: 0 0 14px var(--cyan);
+            box-shadow: 0 0 22px var(--cyan);
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
         }
 
+        .mic-center-btn:active { transform: scale(0.92); }
+
         .prompt-sub {
             text-align: center;
-            font-size: 0.62rem;
+            font-size: 0.7rem;
             color: var(--text-dim);
-            margin-top: 2px;
-            margin-bottom: 2px;
+            margin-top: 4px;
+            margin-bottom: 8px;
         }
 
         /* Modules Grid */
         .modules-grid {
-            display: grid !important;
-            grid-template-columns: repeat(4, 1fr) !important;
-            gap: 5px !important;
-            margin-bottom: 0px !important;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
         }
 
         .module-card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-radius: 8px;
-            padding: 5px 2px;
+            border-radius: 10px;
+            padding: 8px 2px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
             cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .module-card:active {
+            background: rgba(0, 240, 255, 0.25);
+            transform: scale(0.95);
         }
 
         .module-svg {
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             fill: none;
             stroke: var(--cyan);
             stroke-width: 2;
-            margin-bottom: 2px;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            margin-bottom: 3px;
         }
 
         .module-title {
-            font-size: 0.62rem;
+            font-size: 0.65rem;
             font-weight: 700;
             color: #ffffff;
         }
 
         .module-desc {
-            font-size: 0.48rem;
+            font-size: 0.52rem;
             color: var(--text-dim);
-            margin-top: 1px;
+            margin-top: 2px;
             line-height: 1.1;
         }
 
-        /* BARRA INFERIOR FIJA ANCLADA SOBRE LA BARRA DE ANDROID */
+        /* Navigation Bar */
         .bottom-nav {
-            position: fixed !important;
-            bottom: 0 !important;
-            left: 0 !important;
-            width: 100vw !important;
-            height: 52px !important;
-            background: #020712 !important;
-            border-top: 1px solid var(--card-border) !important;
-            display: flex !important;
-            justify-content: space-around !important;
-            align-items: center !important;
-            padding: 0 10px 4px 10px !important;
-            z-index: 999999 !important;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background: rgba(2, 8, 20, 0.98);
+            border-top: 1px solid var(--card-border);
+            padding: 6px 0 4px 0;
+            margin-top: 4px;
+            border-radius: 10px 10px 0 0;
         }
 
         .nav-item {
@@ -346,9 +379,8 @@
             align-items: center;
             gap: 2px;
             color: var(--text-dim);
-            font-size: 0.58rem;
+            font-size: 0.62rem;
             cursor: pointer;
-            width: 25%;
         }
 
         .nav-item.active {
@@ -442,6 +474,11 @@
                     <div class="core-sub">MARK 3</div>
                 </div>
             </div>
+
+            <div class="pedestal-wrapper">
+                <div class="light-beam"></div>
+                <div class="pedestal-ellipse"></div>
+            </div>
         </div>
 
         <!-- Voice Control -->
@@ -451,7 +488,7 @@
                     <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
                 </div>
                 <div class="mic-center-btn" onclick="triggerMic()">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#ffffff">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="#ffffff">
                         <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
                         <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
                     </svg>
@@ -460,7 +497,7 @@
                     <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
                 </div>
             </div>
-            <div class="prompt-sub" id="status-prompt">"Habla o escribe un comando..."</div>
+            <div class="prompt-sub" id="status-prompt">PC: Jarvis Mark 3 Online (100%)</div>
         </div>
 
         <!-- 8 Modules Grid -->
