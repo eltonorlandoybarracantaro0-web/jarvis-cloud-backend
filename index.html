@@ -105,6 +105,7 @@
             padding: 6px 10px;
             text-align: right;
             box-shadow: 0 0 12px rgba(0, 240, 255, 0.15);
+            cursor: pointer;
         }
 
         .temp-main {
@@ -337,15 +338,9 @@
             transform: scale(0.95);
         }
 
-        .module-svg {
-            width: 20px;
-            height: 20px;
-            fill: none;
-            stroke: var(--cyan);
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            margin-bottom: 3px;
+        .module-icon {
+            font-size: 1.2rem;
+            margin-bottom: 2px;
         }
 
         .module-title {
@@ -396,6 +391,19 @@
             stroke-width: 2;
         }
 
+        /* Modales */
+        .jarvis-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #02050b; z-index: 9999;
+            padding: 20px; overflow-y: auto; flex-direction: column;
+        }
+        .jarvis-modal.active { display: flex; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(0,240,255,0.3); padding-bottom: 10px; }
+        .modal-header h3 { color: #00f0ff; font-size: 1.1rem; }
+        .close-btn { background: rgba(0,240,255,0.2); border: 1px solid #00f0ff; color: #00f0ff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; }
+
         @keyframes rotateClockwise { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes rotateCounter { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
         @keyframes wave { 0% { transform: scaleY(0.4); } 100% { transform: scaleY(1.3); } }
@@ -420,7 +428,7 @@
                     <div class="greeting">Buenos días, Elton.</div>
                 </div>
             </div>
-            <div class="weather-card" onclick="abrirModulo('Clima')">
+            <div class="weather-card" onclick="abrirVista('modal-clima', 'Mostrando pronóstico del clima')">
                 <div class="temp-main">
                     22°C 
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffaa00" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
@@ -497,37 +505,36 @@
                     <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
                 </div>
             </div>
-            <div class="prompt-sub" id="status-prompt">"Habla o escribe un comando..."</div>
+            <div class="prompt-sub" id="status-prompt">Inicializando sistemas...</div>
         </div>
 
         <!-- 8 Modules Grid -->
-        <!-- Grid de Módulos (Acciones exclusivas del celular) -->
-<div class="modules-grid">
-    <div class="module-card" onclick="abrirVista('modal-clima')">
-        <div class="module-icon">☁️</div><div class="module-title">Clima</div><div class="module-desc">Pronóstico</div>
-    </div>
-    <div class="module-card" onclick="abrirVista('modal-navegacion')">
-        <div class="module-icon">📍</div><div class="module-title">Navegación</div><div class="module-desc">Ubicación</div>
-    </div>
-    <div class="module-card" onclick="abrirVista('modal-musica')">
-        <div class="module-icon">🎵</div><div class="module-title">Música</div><div class="module-desc">Reproductor</div>
-    </div>
-    <div class="module-card" onclick="window.location.href='tel:'">
-        <div class="module-icon">📞</div><div class="module-title">Llamadas</div><div class="module-desc">Marcador</div>
-    </div>
-    <div class="module-card" onclick="abrirVista('modal-hogar')">
-        <div class="module-icon">🏠</div><div class="module-title">Hogar</div><div class="module-desc">Luces y TV</div>
-    </div>
-    <div class="module-card" onclick="abrirVista('modal-sistema')">
-        <div class="module-icon">⊞</div><div class="module-title">Aplicaciones</div><div class="module-desc">Apps</div>
-    </div>
-    <div class="module-card" onclick="abrirVista('modal-sistema')">
-        <div class="module-icon">⚙️</div><div class="module-title">Sistema</div><div class="module-desc">Ajustes</div>
-    </div>
-    <div class="module-card" onclick="abrirVista('modal-configuracion')">
-        <div class="module-icon">📁</div><div class="module-title">Más</div><div class="module-desc">Herramientas</div>
-    </div>
-</div>
+        <div class="modules-grid">
+            <div class="module-card" onclick="abrirVista('modal-clima', 'Mostrando el pronóstico del clima')">
+                <div class="module-icon">☁️</div><div class="module-title">Clima</div><div class="module-desc">Pronóstico</div>
+            </div>
+            <div class="module-card" onclick="abrirVista('modal-navegacion', 'Abriendo sistema de navegación')">
+                <div class="module-icon">📍</div><div class="module-title">Navegación</div><div class="module-desc">Ubicación</div>
+            </div>
+            <div class="module-card" onclick="abrirVista('modal-musica', 'Iniciando reproducción de música')">
+                <div class="module-icon">🎵</div><div class="module-title">Música</div><div class="module-desc">Reproductor</div>
+            </div>
+            <div class="module-card" onclick="hablarCelular('Abrir marcador de llamadas'); window.open('tel:', '_self')">
+                <div class="module-icon">📞</div><div class="module-title">Llamadas</div><div class="module-desc">Marcador</div>
+            </div>
+            <div class="module-card" onclick="abrirVista('modal-hogar', 'Cargando control del hogar')">
+                <div class="module-icon">🏠</div><div class="module-title">Hogar</div><div class="module-desc">Luces y TV</div>
+            </div>
+            <div class="module-card" onclick="abrirVista('modal-sistema', 'Desplegando aplicaciones')">
+                <div class="module-icon">⊞</div><div class="module-title">Aplicaciones</div><div class="module-desc">Apps</div>
+            </div>
+            <div class="module-card" onclick="abrirVista('modal-sistema', 'Desplegando estado del sistema')">
+                <div class="module-icon">⚙️</div><div class="module-title">Sistema</div><div class="module-desc">Ajustes</div>
+            </div>
+            <div class="module-card" onclick="abrirVista('modal-configuracion', 'Herramientas del sistema')">
+                <div class="module-icon">📁</div><div class="module-title">Más</div><div class="module-desc">Herramientas</div>
+            </div>
+        </div>
 
         <!-- Bottom Navigation -->
         <div class="bottom-nav">
@@ -550,191 +557,253 @@
         </div>
     </div>
 
+    <!-- MODALES Y PANTALLAS SECUNDARIAS -->
+    <div id="modal-clima" class="jarvis-modal">
+        <div class="modal-header"><h3>CLIMA - LIMA, PERÚ</h3><div class="close-btn" onclick="cerrarVista()">✕</div></div>
+        <div style="text-align:center; padding: 20px;">
+            <h1 style="font-size: 3.5rem; color: #00f0ff;">22°C</h1>
+            <p style="color:#7a9bbd;">Parcialmente Nublado | Máx: 24° Mín: 18°</p>
+        </div>
+    </div>
+
+    <div id="modal-navegacion" class="jarvis-modal">
+        <div class="modal-header"><h3>NAVEGACIÓN DE RUTA</h3><div class="close-btn" onclick="cerrarVista()">✕</div></div>
+        <div style="background:#071326; border:1px solid #00f0ff; border-radius:12px; padding:20px; text-align:center; margin-bottom:15px;">
+            <p style="color:#00f0ff;">📍 Ruta Activa: Trabajo (18 min - 7.2 km)</p>
+        </div>
+        <button onclick="window.open('https://maps.google.com', '_self')" style="background:#00f0ff; color:#000; font-weight:bold; padding:15px; border-radius:8px; border:none; width:100%;">ABRIR GOOGLE MAPS</button>
+    </div>
+
+    <div id="modal-musica" class="jarvis-modal">
+        <div class="modal-header"><h3>MÚSICA - SPOTIFY / YOUTUBE</h3><div class="close-btn" onclick="cerrarVista()">✕</div></div>
+        <div style="text-align:center;">
+            <div style="width:160px; height:160px; background:#112233; border:1px solid #00f0ff; border-radius:12px; margin:0 auto 15px auto; display:flex; align-items:center; justify-content:center; font-size:3rem;">🎵</div>
+            <h3>Believer</h3>
+            <p style="color:#7a9bbd;">Imagine Dragons</p>
+        </div>
+    </div>
+
+    <div id="modal-sistema" class="jarvis-modal">
+        <div class="modal-header"><h3>CONTROL DEL SISTEMA</h3><div class="close-btn" onclick="cerrarVista()">✕</div></div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <div style="background:rgba(0,240,255,0.1); border:1px solid #00f0ff; padding:12px; border-radius:8px;">📶 Wi-Fi: Activado</div>
+            <div style="background:rgba(0,240,255,0.1); border:1px solid #00f0ff; padding:12px; border-radius:8px;">📡 Bluetooth: Activado</div>
+            <div style="background:rgba(0,240,255,0.1); border:1px solid #00f0ff; padding:12px; border-radius:8px;">💡 Linterna: Apagada</div>
+            <div style="background:rgba(0,240,255,0.1); border:1px solid #00f0ff; padding:12px; border-radius:8px;">🔋 Batería: 78%</div>
+        </div>
+    </div>
+
+    <div id="modal-hogar" class="jarvis-modal">
+        <div class="modal-header"><h3>DISPOSITIVOS DEL HOGAR</h3><div class="close-btn" onclick="cerrarVista()">✕</div></div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <div style="background:rgba(0,240,255,0.1); border:1px solid #00f0ff; padding:12px; border-radius:8px;">💡 Luces Sala: ON</div>
+            <div style="background:rgba(3,15,30,0.8); border:1px solid rgba(0,240,255,0.2); padding:12px; border-radius:8px;">📺 TV Principal: OFF</div>
+        </div>
+    </div>
+
+    <div id="modal-configuracion" class="jarvis-modal">
+        <div class="modal-header"><h3>CONFIGURACIÓN DE JARVIS</h3><div class="close-btn" onclick="cerrarVista()">✕</div></div>
+        <p>Jarvis Mark 3 - Versión 3.0.0 Cloud</p>
+        <p style="color:#7a9bbd;">Usuario: Elton</p>
+    </div>
+
+    <!-- SCRIPT ÚNICO Y SIN REPETICIONES -->
     <script>
         const API_URL = "https://jarvis-cloud-backend-k8e4.onrender.com";
-
-        let rec;
+        let rec = null;
         let escuchaActiva = false;
         let ultimaTareaHablada = "";
 
-        // Función para que el celular hable en voz alta
+        // SÍNTESIS DE VOZ
         function hablarCelular(texto) {
             if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel(); // Cancelar voces anteriores
-                const utterance = new SpeechSynthesisUtterance(texto);
-                utterance.lang = 'es-ES';
-                utterance.rate = 1.0;
-                window.speechSynthesis.speak(utterance);
+                window.speechSynthesis.cancel();
+                const ut = new SpeechSynthesisUtterance(texto);
+                ut.lang = 'es-ES';
+                ut.rate = 1.0;
+                ut.pitch = 1.0;
+                window.speechSynthesis.speak(ut);
             }
         }
 
-        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    rec = new SpeechRecognition();
-    rec.lang = 'es-ES';
-    rec.continuous = true;
-    rec.interimResults = false;
-
-    rec.onstart = () => {
-        escuchaActiva = true;
-        const prompt = document.getElementById('status-prompt');
-        if (prompt) {
-            prompt.innerText = 'Escuchando... Di "Jarvis" seguido de tu orden';
-            prompt.style.color = "#00f0ff";
-        }
-    };
-
-    rec.onresult = (event) => {
-        const totalResultados = event.results.length;
-        const textoEscuchado = event.results[totalResultados - 1][0].transcript.toLowerCase().trim();
-
-        console.log("Texto detectado:", textoEscuchado);
-
-        // EVALUACIÓN DE PALABRA CLAVE BASE "JARVIS"
-        if (textoEscuchado.includes("jarvis")) {
-            const prompt = document.getElementById('status-prompt');
-            if (prompt) {
-                prompt.innerText = `Procesando: "${textoEscuchado}"...`;
-                prompt.style.color = "#00ff64";
+        // CONTROL DE VISTAS Y MODALES
+        function abrirVista(idModal, mensajeVoz) {
+            document.querySelectorAll('.jarvis-modal').forEach(m => m.classList.remove('active'));
+            const modal = document.getElementById(idModal);
+            if (modal) {
+                modal.classList.add('active');
+                if (mensajeVoz) hablarCelular(mensajeVoz);
             }
 
-            let orden = textoEscuchado.replace("jarvis", "").trim();
-
-            // =========================================================
-            // CASO A: SI CONTIENE "MARK 3" / "MACK 3" / "EN LA PC"
-            // ENVÍA LA ORDEN A LA PC
-            // =========================================================
-            if (orden.includes("mark 3") || orden.includes("mack 3") || orden.includes("mac 3") || orden.includes("en la pc")) {
-                let ordenPC = orden.replace("mark 3", "").replace("mack 3", "").replace("mac 3", "").replace("en la pc", "").trim();
-                if (ordenPC === "") ordenPC = "iniciar jarvis";
-
-                hablarCelular(`Enviando a la PC: ${ordenPC}`);
-
-                fetch(`${API_URL}/actualizar_estado`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        tarea_actual: `Procesando en PC: ${ordenPC}`,
-                        progreso: 50,
-                        comando_pendiente: ordenPC
-                    })
-                });
-                return; // OBLIGATORIO: Detiene para no abrir cosas en el celular
+            if (idModal === 'modal-musica') {
+                setTimeout(() => {
+                    window.open('https://www.youtube.com', '_blank');
+                }, 2200);
             }
-
-            // =========================================================
-            // CASO B: ÓRDENES LOCALES PARA EL CELULAR
-            // (NO SE ENVIAN A LA PC)
-            // =========================================================
-
-            // 1. Llamadas Locales
-            if (orden.includes("llama") || orden.includes("llamar") || orden.includes("marcar")) {
-                let numero = orden.replace(/[^0-9+]/g, '');
-                if (numero.length >= 3) {
-                    hablarCelular("Iniciando llamada al " + numero);
-                    window.open("tel:" + numero, "_self");
-                    return;
-                }
-            }
-
-            // 2. Modales / Pantallas en Celular con Respuesta por Voz e IA
-        let ordenLimpia = orden.toLowerCase();
-        if (ordenLimpia.includes("clima")) abrirVista('modal-clima', 'Mostrando el pronóstico del clima');
-        else if (ordenLimpia.includes("navegación") || ordenLimpia.includes("mapa")) abrirVista('modal-navegacion', 'Abriendo mapa y rutas');
-        else if (ordenLimpia.includes("música") || ordenLimpia.includes("youtube")) abrirVista('modal-musica', 'Iniciando reproducción de música');
-        else if (ordenLimpia.includes("sistema")) abrirVista('modal-sistema', 'Desplegando estado del sistema');
-        else if (ordenLimpia.includes("hogar") || ordenLimpia.includes("dispositivos")) abrirVista('modal-hogar', 'Abriendo control del hogar');
-        else if (ordenLimpia.includes("configuración")) abrirVista('modal-configuracion', 'Ajustes del sistema');
-        else if (ordenLimpia.includes("aplicaciones") || ordenLimpia.includes("apps")) abrirVista('modal-sistema', 'Desplegando aplicaciones');
-        else if (ordenLimpia.includes("cerrar") || ordenLimpia.includes("inicio")) cerrarVista();
-        else {
-            // 3. CONSULTA DIRECTA A LA IA (GEMINI) SI NO ES COMANDO LOCAL
-            hablarCelular("Consultando a la inteligencia artificial...");
-            fetch(`${API_URL}/actualizar_estado`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    tarea_actual: `Pregunta IA: ${orden}`,
-                    progreso: 50,
-                    comando_pendiente: orden
-                })
-            })
-            .then(res => res.json())
-            .then(data => {
-                let respuesta = data.estado ? data.estado.respuesta_jarvis : null;
-                if (respuesta) {
-                    hablarCelular(respuesta);
-                    const prompt = document.getElementById('status-prompt');
-                    if (prompt) prompt.innerText = `Jarvis: "${respuesta}"`;
-                }
-            })
-            .catch(err => {
-                hablarCelular("No pude conectar con la inteligencia artificial");
-            });
         }
-    }
-};
 
-    // Reinicio automático continuo
-    rec.onend = () => {
-        if (escuchaActiva) {
-            try { rec.start(); } catch(e) {}
-        }
-    };
-
-    rec.onerror = (e) => {
-        setTimeout(() => {
-            if (escuchaActiva) { try { rec.start(); } catch(err) {} }
-        }, 1000);
-    };
-}
-
-        // Activar micrófono persistente al tocar la pantalla
-function triggerMic() {
-    escuchaActiva = true;
-    hablarCelular("Jarvis escuchando");
-    try {
-        rec.start();
-    } catch(e) {
-        console.log("El micrófono ya se encuentra activo");
-    }
-}
-
-        function abrirModulo(nombreModulo) {
-            const prompt = document.getElementById('status-prompt');
-            prompt.innerText = `Ejecutando: ${nombreModulo}...`;
-            prompt.style.color = "#00ff64";
-
-            hablarCelular(`Abriendo módulo ${nombreModulo}`);
-
-            fetch(`${API_URL}/actualizar_estado`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    tarea_actual: `Módulo seleccionado: ${nombreModulo}`,
-                    progreso: 100,
-                    comando_pendiente: nombreModulo === 'Navegación' ? 'abrir navegador' : nombreModulo === 'Música' ? 'abrir youtube' : `abrir ${nombreModulo.toLowerCase()}`
-                })
-            });
+        function cerrarVista() {
+            document.querySelectorAll('.jarvis-modal').forEach(m => m.classList.remove('active'));
+            hablarCelular("Regresando a la pantalla principal, Jefe");
         }
 
         function cambiarTab(elemento, nombreTab) {
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
             elemento.classList.add('active');
-            document.getElementById('status-prompt').innerText = `Vista: ${nombreTab}`;
-            document.getElementById('status-prompt').style.color = "#00f0ff";
+            const prompt = document.getElementById('status-prompt');
+            if (prompt) {
+                prompt.innerText = `Vista: ${nombreTab}`;
+                prompt.style.color = "#00f0ff";
+            }
         }
 
+        // INICIALIZACIÓN AUTOMÁTICA Y SALUDO
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                hablarCelular("Sistemas en línea. Jarvis Mark 3 listo para sus órdenes, Jefe.");
+                iniciarMicrofono();
+            }, 1000);
+        });
+
+        // RECONOCIMIENTO DE VOZ CONTINUO
+        function iniciarMicrofono() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                const prompt = document.getElementById('status-prompt');
+                if (prompt) prompt.innerText = "Navegador no soporta micrófono por voz";
+                return;
+            }
+
+            if (!rec) {
+                rec = new SpeechRecognition();
+                rec.lang = 'es-ES';
+                rec.continuous = true;
+                rec.interimResults = false;
+
+                rec.onstart = () => {
+                    escuchaActiva = true;
+                    const prompt = document.getElementById('status-prompt');
+                    if (prompt) {
+                        prompt.innerText = 'Escuchando en segundo plano...';
+                        prompt.style.color = '#00f0ff';
+                    }
+                };
+
+                rec.onerror = (e) => {
+                    console.log("Error de micrófono:", e);
+                };
+
+                rec.onend = () => {
+                    if (escuchaActiva) {
+                        try { rec.start(); } catch (e) {}
+                    }
+                };
+
+                rec.onresult = (event) => {
+                    const totalResultados = event.results.length;
+                    const textoEscuchado = event.results[totalResultados - 1][0].transcript.toLowerCase().trim();
+
+                    console.log("Texto detectado:", textoEscuchado);
+                    if (!textoEscuchado) return;
+
+                    const prompt = document.getElementById('status-prompt');
+                    if (prompt) {
+                        prompt.innerText = `Procesando: "${textoEscuchado}"...`;
+                        prompt.style.color = "#00ff64";
+                    }
+
+                    let orden = textoEscuchado.replace(/^jarvis\s*/, "").trim();
+                    if (orden === "") orden = textoEscuchado;
+
+                    // ÓRDENES EXCLUSIVAS DE LAPTOP
+                    if (orden.includes("mark 3") || orden.includes("mack 3") || orden.includes("en la pc")) {
+                        let ordenPC = orden.replace("mark 3", "").replace("mack 3", "").replace("en la pc", "").trim();
+                        if (ordenPC === "") ordenPC = "iniciar jarvis";
+
+                        hablarCelular(`Enviando orden a la PC: ${ordenPC}`);
+
+                        fetch(`${API_URL}/actualizar_estado`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                tarea_actual: `Procesando en PC: ${ordenPC}`,
+                                progreso: 50,
+                                comando_pendiente: ordenPC
+                            })
+                        }).catch(err => console.log(err));
+                        return;
+                    }
+
+                    // ÓRDENES LOCALES Y MODALES
+                    let ordenLimpia = orden.toLowerCase();
+                    if (ordenLimpia.includes("llama") || ordenLimpia.includes("llamar") || ordenLimpia.includes("marcar")) {
+                        let numero = ordenLimpia.replace(/[^0-9+]/g, '');
+                        if (numero.length >= 3) {
+                            hablarCelular("Iniciando llamada al " + numero);
+                            window.open("tel:" + numero, "_self");
+                            return;
+                        }
+                    }
+
+                    if (ordenLimpia.includes("clima")) abrirVista('modal-clima', 'Mostrando el pronóstico del clima');
+                    else if (ordenLimpia.includes("navegación") || ordenLimpia.includes("mapa")) abrirVista('modal-navegacion', 'Abriendo mapa y rutas');
+                    else if (ordenLimpia.includes("música") || ordenLimpia.includes("youtube")) abrirVista('modal-musica', 'Iniciando reproducción de música');
+                    else if (ordenLimpia.includes("hogar") || ordenLimpia.includes("dispositivos")) abrirVista('modal-hogar', 'Abriendo control del hogar');
+                    else if (ordenLimpia.includes("configuración") || ordenLimpia.includes("sistema")) abrirVista('modal-sistema', 'Desplegando ajustes del sistema');
+                    else if (ordenLimpia.includes("aplicaciones") || ordenLimpia.includes("apps")) abrirVista('modal-sistema', 'Desplegando aplicaciones');
+                    else if (ordenLimpia.includes("cerrar") || ordenLimpia.includes("inicio")) cerrarVista();
+                    else {
+                        // CONSULTA IA GEMINI
+                        if (prompt) prompt.innerText = `Jarvis procesando...`;
+
+                        fetch(`${API_URL}/actualizar_estado`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                tarea_actual: `Pregunta IA: ${orden}`,
+                                progreso: 50,
+                                comando_pendiente: orden
+                            })
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            let respuesta = data.estado ? data.estado.respuesta_jarvis : null;
+                            if (respuesta) {
+                                hablarCelular(respuesta);
+                                if (prompt) prompt.innerText = `Jarvis: "${respuesta}"`;
+                            } else {
+                                hablarCelular("No recibí respuesta del núcleo de IA, Jefe.");
+                            }
+                        })
+                        .catch(err => {
+                            hablarCelular("Error de conexión con el servidor en Render, Señor.");
+                        });
+                    }
+                };
+            }
+
+            try { rec.start(); } catch (e) {}
+        }
+
+        function triggerMic() {
+            if (!escuchaActiva) {
+                iniciarMicrofono();
+            } else {
+                hablarCelular("Micrófono de Jarvis activo, le escucho Jefe.");
+            }
+        }
+
+        // SINCRONIZACIÓN CON EL BACKEND
         async function sincronizarAPI() {
             try {
                 const res = await fetch(`${API_URL}/obtener_estado`);
                 if (res.ok) {
                     const data = await res.json();
-                    if(data.tarea_actual && data.tarea_actual !== "Sin tareas activas en PC") {
-                        document.getElementById('status-prompt').innerText = `PC: ${data.tarea_actual} (${data.progreso}%)`;
+                    if (data.tarea_actual && data.tarea_actual !== "Sin tareas activas en PC") {
+                        const prompt = document.getElementById('status-prompt');
+                        if (prompt) prompt.innerText = `PC: ${data.tarea_actual} (${data.progreso}%)`;
                         
-                        // Si la PC reporta una tarea completada nueva, el celular lo verbaliza
-                        if(data.progreso === 100 && data.tarea_actual !== ultimaTareaHablada) {
+                        if (data.progreso === 100 && data.tarea_actual !== ultimaTareaHablada) {
                             ultimaTareaHablada = data.tarea_actual;
                             hablarCelular(data.tarea_actual);
                         }
@@ -744,105 +813,6 @@ function triggerMic() {
         }
 
         setInterval(sincronizarAPI, 2500);
-
-        window.onload = () => {
-            setTimeout(triggerMic, 1000);
-        };
     </script>
-
-    <!-- ================================================================= -->
-<!-- MODALES Y FUNCIONALIDAD DE PANTALLAS SECUNDARIAS                  -->
-<!-- ================================================================= -->
-<style>
-    .jarvis-modal {
-        display: none;
-        position: fixed;
-        top: 0; left: 0; width: 100vw; height: 100vh;
-        background: #02050b; z-index: 9999;
-        padding: 20px; overflow-y: auto; flex-direction: column;
-    }
-    .jarvis-modal.active { display: flex; }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(0,240,255,0.3); padding-bottom: 10px; }
-    .modal-header h3 { color: #00f0ff; font-size: 1.1rem; }
-    .close-btn { background: rgba(0,240,255,0.2); border: 1px solid #00f0ff; color: #00f0ff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; }
-</style>
-
-<!-- Ventanas Emergentes (Modales) -->
-<div id="modal-clima" class="jarvis-modal">
-    <div class="modal-header"><h3>CLIMA - LIMA, PERÚ</h3><div class="close-btn" onclick="cerrarVista()">✕</div></div>
-    <div style="text-align:center; padding: 20px;">
-        <h1 style="font-size: 3.5rem; color: #00f0ff;">22°C</h1>
-        <p style="color:#7a9bbd;">Parcialmente Nublado | Máx: 24° Mín: 18°</p>
-    </div>
-</div>
-
-<div id="modal-navegacion" class="jarvis-modal">
-    <div class="modal-header"><h3>NAVEGACIÓN DE RUTA</h3><div class="close-btn" onclick="cerrarVista()">✕</div></div>
-    <div style="background:#071326; border:1px solid #00f0ff; border-radius:12px; padding:20px; text-align:center; margin-bottom:15px;">
-        <p style="color:#00f0ff;">📍 Ruta Activa: Trabajo (18 min - 7.2 km)</p>
-    </div>
-    <button onclick="window.open('https://maps.google.com')" style="background:#00f0ff; color:#000; font-weight:bold; padding:15px; border-radius:8px; border:none; width:100%;">ABRIR GOOGLE MAPS</button>
-</div>
-
-<div id="modal-musica" class="jarvis-modal">
-    <div class="modal-header"><h3>MÚSICA - SPOTIFY</h3><div class="close-btn" onclick="cerrarVista()">✕</div></div>
-    <div style="text-align:center;">
-        <div style="width:160px; height:160px; background:#112233; border:1px solid #00f0ff; border-radius:12px; margin:0 auto 15px auto; display:flex; align-items:center; justify-content:center; font-size:3rem;">🎵</div>
-        <h3>Believer</h3>
-        <p style="color:#7a9bbd;">Imagine Dragons</p>
-    </div>
-</div>
-
-<div id="modal-sistema" class="jarvis-modal">
-    <div class="modal-header"><h3>CONTROL DEL SISTEMA</h3><div class="close-btn" onclick="cerrarVista()">✕</div></div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-        <div style="background:rgba(0,240,255,0.1); border:1px solid #00f0ff; padding:12px; border-radius:8px;">📶 Wi-Fi: Activado</div>
-        <div style="background:rgba(0,240,255,0.1); border:1px solid #00f0ff; padding:12px; border-radius:8px;">📡 Bluetooth: Activado</div>
-        <div style="background:rgba(0,240,255,0.1); border:1px solid #00f0ff; padding:12px; border-radius:8px;">💡 Linterna: Apagada</div>
-        <div style="background:rgba(0,240,255,0.1); border:1px solid #00f0ff; padding:12px; border-radius:8px;">🔋 Batería: 78%</div>
-    </div>
-</div>
-
-<div id="modal-hogar" class="jarvis-modal">
-    <div class="modal-header"><h3>DISPOSITIVOS DEL HOGAR</h3><div class="close-btn" onclick="cerrarVista()">✕</div></div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-        <div style="background:rgba(0,240,255,0.1); border:1px solid #00f0ff; padding:12px; border-radius:8px;">💡 Luces Sala: ON</div>
-        <div style="background:rgba(3,15,30,0.8); border:1px solid rgba(0,240,255,0.2); padding:12px; border-radius:8px;">📺 TV Principal: OFF</div>
-    </div>
-</div>
-
-<div id="modal-configuracion" class="jarvis-modal">
-    <div class="modal-header"><h3>CONFIGURACIÓN DE JARVIS</h3><div class="close-btn" onclick="cerrarVista()">✕</div></div>
-    <p>Jarvis Mark 3 - Versión 3.0.0</p>
-    <p style="color:#7a9bbd;">Usuario: Elton</p>
-</div>
-
-<script>
-    function abrirVista(idModal, mensajeVoz) {
-        // 1. Ocultar todos los modales previos
-        document.querySelectorAll('.jarvis-modal').forEach(m => m.classList.remove('active'));
-        
-        // 2. Abrir el modal solicitado
-        let modal = document.getElementById(idModal);
-        if(modal) modal.classList.add('active');
-
-        // 3. Respuesta por Voz Unificada para todos los módulos
-        if (mensajeVoz) {
-            hablarCelular(mensajeVoz);
-        }
-
-        // 4. Lógica especial para YouTube / Música (Abre tras la presentación por voz)
-        if (idModal === 'modal-musica') {
-            setTimeout(() => {
-                window.open('https://www.youtube.com', '_blank');
-            }, 2200); // Espera 2.2 segundos a que Jarvis termine de hablar
-        }
-    }
-
-    function cerrarVista() {
-        document.querySelectorAll('.jarvis-modal').forEach(m => m.classList.remove('active'));
-    }
-</script>
-
 </body>
 </html>
