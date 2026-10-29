@@ -36,6 +36,7 @@
             align-items: center;
         }
 
+        /* 1. Marco Principal con Padding Inferior Ajustado */
         .phone-frame {
             width: 100vw !important;
             height: 100vh !important;
@@ -43,7 +44,7 @@
             display: flex !important;
             flex-direction: column !important;
             justify-content: space-between !important;
-            padding: 10px 10px 0px 10px !important;
+            padding: 8px 10px 0px 10px !important;
             position: relative !important;
             overflow: hidden !important;
             background-image: 
@@ -51,6 +52,45 @@
                 linear-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0, 240, 255, 0.05) 1px, transparent 1px) !important;
             background-size: 100% 100%, 20px 20px, 20px 20px !important;
+        }
+
+        /* 2. Cuadrícula Compactada para Dar Espacio a la Barra */
+        .modules-grid {
+            display: grid !important;
+            grid-template-columns: repeat(4, 1fr) !important;
+            grid-template-rows: repeat(2, auto) !important;
+            gap: 6px !important;
+            width: 100% !important;
+            padding: 2px 0 !important;
+            margin-bottom: 2px !important;
+        }
+
+        .module-card {
+            background: rgba(3, 12, 28, 0.88) !important;
+            border: 1px solid rgba(0, 240, 255, 0.3) !important;
+            border-radius: 10px !important;
+            padding: 8px 4px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+            cursor: pointer !important;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.08) !important;
+        }
+
+        /* 3. Barra Inferior Fija en el Borde */
+        .bottom-nav {
+            width: 100% !important;
+            height: 48px !important;
+            background: rgba(2, 7, 18, 0.98) !important;
+            border-top: 1px solid rgba(0, 240, 255, 0.35) !important;
+            border-radius: 12px 12px 0 0 !important;
+            display: flex !important;
+            justify-content: space-around !important;
+            align-items: center !important;
+            padding: 0 10px !important;
+            margin-top: 0px !important;
         }
 
         /* Header Superior */
