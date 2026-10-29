@@ -573,235 +573,173 @@
     </div>
 
     <script>
-        const API_URL = "https://jarvis-cloud-backend-k8e4.onrender.com";
+    const API_URL = "https://jarvis-cloud-backend-k8e4.onrender.com";
+    let escuchaActiva = false;
+    let rec = null;
 
-        let rec;
-        let escuchaActiva = false;
-        let ultimaTareaHablada = "";
+    // 1. SÍNTESIS DE VOZ EN EL CELULAR
+    function hablarCelular(texto) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const ut = new SpeechSynthesisUtterance(texto);
+            ut.lang = 'es-ES';
+            ut.rate = 1.0;
+            ut.pitch = 1.0;
+            window.speechSynthesis.speak(ut);
+        }
+    }
 
-        // Función para que el celular hable en voz alta
-        function hablarCelular(texto) {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel(); // Cancelar voces anteriores
-                const utterance = new SpeechSynthesisUtterance(texto);
-                utterance.lang = 'es-ES';
-                utterance.rate = 1.0;
-                window.speechSynthesis.speak(utterance);
-            }
+    // 2. CONTROL DE MODALES / PANTALLAS
+    function abrirVista(idModal, mensajeVoz) {
+        document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+        const modal = document.getElementById(idModal);
+        if (modal) {
+            modal.classList.add('active');
+            if (mensajeVoz) hablarCelular(mensajeVoz);
+        }
+    }
+
+    function cerrarVista() {
+        document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+        hablarCelular("Regresando a la pantalla principal, Jefe");
+    }
+
+    // 3. INICIALIZACIÓN Y SALUDO AL CARGAR LA PÁGINA
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            hablarCelular("Sistemas en línea. Jarvis Mark 3 listo para sus órdenes, Jefe.");
+            iniciarMicrofono();
+        }, 1000);
+    });
+
+    // 4. CONFIGURACIÓN DEL RECONOCIMIENTO DE VOZ CONTINUO
+    function iniciarMicrofono() {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            const prompt = document.getElementById('status-prompt');
+            if (prompt) prompt.innerText = "Navegador no soporta micrófono por voz";
+            return;
         }
 
-        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    rec = new SpeechRecognition();
-    rec.lang = 'es-ES';
-    rec.continuous = true;
-    rec.interimResults = false;
+        if (!rec) {
+            rec = new SpeechRecognition();
+            rec.lang = 'es-ES';
+            rec.continuous = true;
+            rec.interimResults = false;
 
-    rec.onstart = () => {
-        escuchaActiva = true;
-        const prompt = document.getElementById('status-prompt');
-        if (prompt) {
-            prompt.innerText = 'Escuchando... Di "Jarvis" seguido de tu orden';
-            prompt.style.color = "#00f0ff";
-        }
-    };
-
-    rec.onresult = (event) => {
-            const totalResultados = event.results.length;
-            const textoEscuchado = event.results[totalResultados - 1][0].transcript.toLowerCase().trim();
-
-            console.log("Texto detectado:", textoEscuchado);
-
-            // EVALUACIÓN DE PALABRA CLAVE BASE "JARVIS"
-            if (textoEscuchado.includes("jarvis")) {
+            rec.onstart = () => {
+                escuchaActiva = true;
                 const prompt = document.getElementById('status-prompt');
                 if (prompt) {
-                    prompt.innerText = `Procesando: "${textoEscuchado}"...`;
-                    prompt.style.color = "#00ff64";
+                    prompt.innerText = 'Escuchando en segundo plano...';
+                    prompt.style.color = '#00f0ff';
                 }
+            };
 
-                let orden = textoEscuchado.replace("jarvis", "").trim();
+            rec.onerror = (e) => {
+                console.log("Error de micrófono:", e);
+            };
 
-                // =========================================================
-                // CASO A: SI CONTIENE "MARK 3" / "MACK 3" / "EN LA PC"
-                // ENVÍA LA ORDEN A LA PC
-                // =========================================================
-                if (orden.includes("mark 3") || orden.includes("mack 3") || orden.includes("mac 3") || orden.includes("en la pc")) {
-                    let ordenPC = orden.replace("mark 3", "").replace("mack 3", "").replace("mac 3", "").replace("en la pc", "").trim();
-                    if (ordenPC === "") ordenPC = "iniciar jarvis";
-
-                    hablarCelular(`Enviando orden a la PC: ${ordenPC}`);
-
-                    fetch(`${API_URL}/actualizar_estado`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            tarea_actual: `Procesando en PC: ${ordenPC}`,
-                            progreso: 50,
-                            comando_pendiente: ordenPC
-                        })
-                    });
-                    return;
+            rec.onend = () => {
+                if (escuchaActiva) {
+                    try { rec.start(); } catch (e) {}
                 }
+            };
 
-                // =========================================================
-                // CASO B: ÓRDENES LOCALES PARA EL CELULAR Y CONSULTA A GEMINI
-                // =========================================================
+            rec.onresult = (event) => {
+                const totalResultados = event.results.length;
+                const textoEscuchado = event.results[totalResultados - 1][0].transcript.toLowerCase().trim();
+                console.log("Texto detectado:", textoEscuchado);
 
-                // 1. Llamadas Locales
-                let ordenLimpia = orden.toLowerCase();
-                if (ordenLimpia.includes("llama") || ordenLimpia.includes("llamar") || ordenLimpia.includes("marcar")) {
-                    let numero = ordenLimpia.replace(/[^0-9+]/g, '');
-                    if (numero.length >= 3) {
-                        hablarCelular("Iniciando llamada al " + numero);
-                        window.open("tel:" + numero, "_self");
+                // EVALUACIÓN DE PALABRA CLAVE "JARVIS"
+                if (textoEscuchado.includes("jarvis")) {
+                    const prompt = document.getElementById('status-prompt');
+                    if (prompt) {
+                        prompt.innerText = `Procesando: "${textoEscuchado}"...`;
+                        prompt.style.color = "#00ff64";
+                    }
+
+                    let orden = textoEscuchado.replace("jarvis", "").trim();
+
+                    // CASO A: ENVIAR A LA PC SI CONTIENE FRASES EXPLÍCITAS DE LAPTOP
+                    if (orden.includes("mark 3") || orden.includes("mack 3") || orden.includes("en la pc")) {
+                        let ordenPC = orden.replace("mark 3", "").replace("mack 3", "").replace("en la pc", "").trim();
+                        if (ordenPC === "") ordenPC = "iniciar jarvis";
+
+                        hablarCelular(`Enviando a la PC: ${ordenPC}`);
+
+                        fetch(`${API_URL}/actualizar_estado`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                tarea_actual: `Procesando en PC: ${ordenPC}`,
+                                progreso: 50,
+                                comando_pendiente: ordenPC
+                            })
+                        }).catch(err => console.log(err));
                         return;
                     }
-                }
 
-                // 2. Modales / Pantallas en Celular
-                if (ordenLimpia.includes("clima")) abrirVista('modal-clima', 'Mostrando el pronóstico del clima');
-                else if (ordenLimpia.includes("navegación") || ordenLimpia.includes("mapa")) abrirVista('modal-navegacion', 'Abriendo mapa y rutas');
-                else if (ordenLimpia.includes("música") || ordenLimpia.includes("youtube")) abrirVista('modal-musica', 'Iniciando reproducción de música');
-                else if (ordenLimpia.includes("sistema")) abrirVista('modal-sistema', 'Desplegando estado del sistema');
-                else if (ordenLimpia.includes("hogar") || ordenLimpia.includes("dispositivos")) abrirVista('modal-hogar', 'Abriendo control del hogar');
-                else if (ordenLimpia.includes("configuración")) abrirVista('modal-configuracion', 'Ajustes del sistema');
-                else if (ordenLimpia.includes("aplicaciones") || ordenLimpia.includes("apps")) abrirVista('modal-sistema', 'Desplegando aplicaciones');
-                else if (ordenLimpia.includes("cerrar") || ordenLimpia.includes("inicio")) cerrarVista();
-                else {
-                    // 3. CONSULTA DIRECTA A GEMINI (SIEMPRE ACTIVA DESDE LA NUBE)
-                    const prompt = document.getElementById('status-prompt');
-                    if (prompt) prompt.innerText = `Jarvis procesando...`;
-
-                    fetch(`${API_URL}/actualizar_estado`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            tarea_actual: `Pregunta IA: ${orden}`,
-                            progreso: 50,
-                            comando_pendiente: orden
-                        })
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        let respuesta = data.estado ? data.estado.respuesta_jarvis : null;
-                        if (respuesta) {
-                            hablarCelular(respuesta);
-                            if (prompt) prompt.innerText = `Jarvis: "${respuesta}"`;
-                        }
-                    })
-                    .catch(err => {
-                        hablarCelular("No pude conectarme con el servidor central, Señor.");
-                    });
-                }
-            }
-        };
-        else if (ordenLimpia.includes("configuración")) abrirVista('modal-configuracion', 'Ajustes del sistema');
-        else if (ordenLimpia.includes("aplicaciones") || ordenLimpia.includes("apps")) abrirVista('modal-sistema', 'Desplegando aplicaciones');
-        else if (ordenLimpia.includes("cerrar") || ordenLimpia.includes("inicio")) cerrarVista();
-        else {
-            // 3. CONSULTA DIRECTA E INMEDIATA A GEMINI
-            const prompt = document.getElementById('status-prompt');
-            if (prompt) prompt.innerText = `Jarvis procesando...`;
-
-            fetch(`${API_URL}/actualizar_estado`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    tarea_actual: `Pregunta IA: ${orden}`,
-                    progreso: 50,
-                    comando_pendiente: orden
-                })
-            })
-            .then(res => res.json())
-            .then(data => {
-                let respuesta = data.estado ? data.estado.respuesta_jarvis : null;
-                if (respuesta) {
-                    hablarCelular(respuesta);
-                    if (prompt) prompt.innerText = `Jarvis: "${respuesta}"`;
-                }
-            })
-            .catch(err => {
-                hablarCelular("No pude conectarme con el núcleo principal, Señor.");
-            });
-        }
-    }
-};
-
-    // Reinicio automático continuo
-    rec.onend = () => {
-        if (escuchaActiva) {
-            try { rec.start(); } catch(e) {}
-        }
-    };
-
-    rec.onerror = (e) => {
-        setTimeout(() => {
-            if (escuchaActiva) { try { rec.start(); } catch(err) {} }
-        }, 1000);
-    };
-}
-
-        // Activar micrófono persistente al tocar la pantalla
-function triggerMic() {
-    escuchaActiva = true;
-    hablarCelular("Jarvis escuchando");
-    try {
-        rec.start();
-    } catch(e) {
-        console.log("El micrófono ya se encuentra activo");
-    }
-}
-
-        function abrirModulo(nombreModulo) {
-            const prompt = document.getElementById('status-prompt');
-            prompt.innerText = `Ejecutando: ${nombreModulo}...`;
-            prompt.style.color = "#00ff64";
-
-            hablarCelular(`Abriendo módulo ${nombreModulo}`);
-
-            fetch(`${API_URL}/actualizar_estado`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    tarea_actual: `Módulo seleccionado: ${nombreModulo}`,
-                    progreso: 100,
-                    comando_pendiente: nombreModulo === 'Navegación' ? 'abrir navegador' : nombreModulo === 'Música' ? 'abrir youtube' : `abrir ${nombreModulo.toLowerCase()}`
-                })
-            });
-        }
-
-        function cambiarTab(elemento, nombreTab) {
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            elemento.classList.add('active');
-            document.getElementById('status-prompt').innerText = `Vista: ${nombreTab}`;
-            document.getElementById('status-prompt').style.color = "#00f0ff";
-        }
-
-        async function sincronizarAPI() {
-            try {
-                const res = await fetch(`${API_URL}/obtener_estado`);
-                if (res.ok) {
-                    const data = await res.json();
-                    if(data.tarea_actual && data.tarea_actual !== "Sin tareas activas en PC") {
-                        document.getElementById('status-prompt').innerText = `PC: ${data.tarea_actual} (${data.progreso}%)`;
-                        
-                        // Si la PC reporta una tarea completada nueva, el celular lo verbaliza
-                        if(data.progreso === 100 && data.tarea_actual !== ultimaTareaHablada) {
-                            ultimaTareaHablada = data.tarea_actual;
-                            hablarCelular(data.tarea_actual);
+                    // CASO B: ÓRDENES LOCALES O LLAMADAS EN EL CELULAR
+                    let ordenLimpia = orden.toLowerCase();
+                    if (ordenLimpia.includes("llama") || ordenLimpia.includes("llamar") || ordenLimpia.includes("marcar")) {
+                        let numero = ordenLimpia.replace(/[^0-9+]/g, '');
+                        if (numero.length >= 3) {
+                            hablarCelular("Iniciando llamada al " + numero);
+                            window.open("tel:" + numero, "_self");
+                            return;
                         }
                     }
+
+                    if (ordenLimpia.includes("clima")) abrirVista('modal-clima', 'Mostrando el pronóstico del clima');
+                    else if (ordenLimpia.includes("navegación") || ordenLimpia.includes("mapa")) abrirVista('modal-navegacion', 'Abriendo mapa y rutas');
+                    else if (ordenLimpia.includes("música") || ordenLimpia.includes("youtube")) abrirVista('modal-musica', 'Iniciando reproducción de música');
+                    else if (ordenLimpia.includes("sistema")) abrirVista('modal-sistema', 'Desplegando estado del sistema');
+                    else if (ordenLimpia.includes("hogar") || ordenLimpia.includes("dispositivos")) abrirVista('modal-hogar', 'Abriendo control del hogar');
+                    else if (ordenLimpia.includes("configuración")) abrirVista('modal-configuracion', 'Ajustes del sistema');
+                    else if (ordenLimpia.includes("aplicaciones") || ordenLimpia.includes("apps")) abrirVista('modal-sistema', 'Desplegando aplicaciones');
+                    else if (ordenLimpia.includes("cerrar") || ordenLimpia.includes("inicio")) cerrarVista();
+                    else {
+                        // CASO C: RESPUESTA DIRECTA DE GEMINI IA
+                        if (prompt) prompt.innerText = `Jarvis procesando...`;
+
+                        fetch(`${API_URL}/actualizar_estado`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                tarea_actual: `Pregunta IA: ${orden}`,
+                                progreso: 50,
+                                comando_pendiente: orden
+                            })
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            let respuesta = data.estado ? data.estado.respuesta_jarvis : null;
+                            if (respuesta) {
+                                hablarCelular(respuesta);
+                                if (prompt) prompt.innerText = `Jarvis: "${respuesta}"`;
+                            }
+                        })
+                        .catch(err => {
+                            hablarCelular("No pude conectarme con el servidor central, Señor.");
+                        });
+                    }
                 }
-            } catch (e) {}
+            };
         }
 
-        setInterval(sincronizarAPI, 2500);
+        try { rec.start(); } catch (e) {}
+    }
 
-        window.onload = () => {
-            setTimeout(triggerMic, 1000);
-        };
-    </script>
+    // BOTÓN CENTRAL DE MICRÓFONO RE-ACTIVABLE POR TOQUE
+    function triggerMic() {
+        if (!escuchaActiva) {
+            iniciarMicrofono();
+        } else {
+            hablarCelular("Micrófono de Jarvis activo, le escucho Jefe.");
+        }
+    }
+</script>
 
     <!-- ================================================================= -->
 <!-- MODALES Y FUNCIONALIDAD DE PANTALLAS SECUNDARIAS                  -->
