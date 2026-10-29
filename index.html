@@ -573,36 +573,37 @@
         let escuchaActiva = false;
         let ultimaTareaHablada = "";
 
-        // REPRODUCTOR DE VOZ NATIVO MP3 (Google TTS)
+        // Salida de voz nativa sin pitido de prueba
         function hablarCelular(texto) {
             if (!texto) return;
 
-            // 1. Pitido sintético de prueba física por hardware en el celular
-            try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = ctx.createOscillator();
-                osc.connect(ctx.destination);
-                osc.start();
-                osc.stop(ctx.currentTime + 0.15);
-            } catch(e) {}
-
-            // 2. Intento de reproducción por elemento Audio
+            // Pausar micrófono si está activo para no saturar el canal de audio
             if (rec && escuchaActiva) {
                 try { rec.abort(); } catch(e) {}
             }
 
-            const urlAudio = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(texto)}&tl=es&client=tw-ob`;
-            const audio = new Audio(urlAudio);
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Cancelar audios en cola
 
-            audio.play().catch(err => {
-                console.error("Error al reproducir audio nativo:", err);
-            });
+                const ut = new SpeechSynthesisUtterance(texto);
+                ut.lang = 'es-ES';
+                ut.rate = 1.0;
 
-            audio.onended = () => {
-                if (escuchaActiva && rec) {
-                    setTimeout(() => { try { rec.start(); } catch(e) {} }, 300);
-                }
-            };
+                // Reactivar micrófono automáticamente al terminar de hablar
+                ut.onend = () => {
+                    if (escuchaActiva && rec) {
+                        setTimeout(() => { try { rec.start(); } catch(e) {} }, 300);
+                    }
+                };
+
+                ut.onerror = () => {
+                    if (escuchaActiva && rec) {
+                        setTimeout(() => { try { rec.start(); } catch(e) {} }, 300);
+                    }
+                };
+
+                window.speechSynthesis.speak(ut);
+            }
         }
 
         // CONTROL DE RECONOCIMIENTO DE VOZ
@@ -728,33 +729,6 @@
         }
 
         setInterval(sincronizarAPI, 2500);
-
-    let vozActivada = false;
-
-        // Desbloqueo de audio y saludo inicial al primer toque
-        function activarAudioInicial() {
-            if (!vozActivada) {
-                vozActivada = true;
-                hablarCelular("Sistemas en línea. Jarvis Mark 3 listo para sus órdenes, Jefe.");
-                if (rec) {
-                    escuchaActiva = true;
-                    try { rec.start(); } catch(e) {}
-                }
-            }
-        }
-
-        // Detectar el primer toque en cualquier parte de la pantalla
-        window.addEventListener('touchstart', activarAudioInicial, { once: true });
-        window.addEventListener('click', activarAudioInicial, { once: true });
-
-        function triggerMic() {
-            activarAudioInicial();
-            hablarCelular("Jarvis conectado y escuchando, dígame Jefe");
-            if (rec) {
-                escuchaActiva = true;
-                try { rec.start(); } catch(e) {}
-            }
-        }
     </script>
 </body>
 </html>
