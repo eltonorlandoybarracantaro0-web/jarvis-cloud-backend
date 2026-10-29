@@ -729,23 +729,30 @@
 
         setInterval(sincronizarAPI, 2500);
 
-    // Saludo de inicio al cargar la página / interacción inicial
-        window.addEventListener('load', () => {
-            setTimeout(() => {
+    let vozActivada = false;
+
+        // Desbloqueo de audio y saludo inicial al primer toque
+        function activarAudioInicial() {
+            if (!vozActivada) {
+                vozActivada = true;
                 hablarCelular("Sistemas en línea. Jarvis Mark 3 listo para sus órdenes, Jefe.");
-            }, 1000);
-        });
+                if (rec) {
+                    escuchaActiva = true;
+                    try { rec.start(); } catch(e) {}
+                }
+            }
+        }
+
+        // Detectar el primer toque en cualquier parte de la pantalla
+        window.addEventListener('touchstart', activarAudioInicial, { once: true });
+        window.addEventListener('click', activarAudioInicial, { once: true });
 
         function triggerMic() {
+            activarAudioInicial();
             hablarCelular("Jarvis conectado y escuchando, dígame Jefe");
             if (rec) {
                 escuchaActiva = true;
-                try {
-                    rec.start();
-                } catch(e) {}
-            } else {
-                const prompt = document.getElementById('status-prompt');
-                if (prompt) prompt.innerText = "Voz no soportada en navegador";
+                try { rec.start(); } catch(e) {}
             }
         }
     </script>
