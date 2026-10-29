@@ -569,9 +569,40 @@
     <script>
         const API_URL = "https://jarvis-cloud-backend-k8e4.onrender.com";
 
-        let rec;
+        let rec = null;
         let escuchaActiva = false;
+        let ultimaTareaHablada = "";
 
+        // REPRODUCTOR DE VOZ NATIVO MP3 (Google TTS)
+        function hablarCelular(texto) {
+            if (!texto) return;
+
+            // Pausar micrófono mientras suena el audio para liberar el canal de sonido en Android
+            if (rec && escuchaActiva) {
+                try { rec.abort(); } catch(e) {}
+            }
+
+            const urlAudio = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(texto)}&tl=es&client=tw-ob`;
+            const audio = new Audio(urlAudio);
+
+            audio.play().catch(() => {
+                // Respaldo por síntesis local si falla la red
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    const ut = new SpeechSynthesisUtterance(texto);
+                    ut.lang = 'es-ES';
+                    window.speechSynthesis.speak(ut);
+                }
+            });
+
+            audio.onended = () => {
+                if (escuchaActiva && rec) {
+                    setTimeout(() => { try { rec.start(); } catch(e) {} }, 300);
+                }
+            };
+        }
+
+        // CONTROL DE RECONOCIMIENTO DE VOZ
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             rec = new SpeechRecognition();
@@ -582,8 +613,10 @@
             rec.onstart = () => {
                 escuchaActiva = true;
                 const prompt = document.getElementById('status-prompt');
-                prompt.innerText = 'Escuchando... Di "Jarvis" seguido de tu orden';
-                prompt.style.color = "#00f0ff";
+                if (prompt) {
+                    prompt.innerText = 'Escuchando... Di "Jarvis" seguido de tu orden';
+                    prompt.style.color = "#00f0ff";
+                }
             };
 
             rec.onresult = (event) => {
@@ -593,11 +626,16 @@
                 console.log("Texto detectado:", textoEscuchado);
 
                 if (textoEscuchado.includes("jarvis")) {
-                    document.getElementById('status-prompt').innerText = `Procesando: "${textoEscuchado}"...`;
-                    document.getElementById('status-prompt').style.color = "#00ff64";
+                    const prompt = document.getElementById('status-prompt');
+                    if (prompt) {
+                        prompt.innerText = `Procesando: "${textoEscuchado}"...`;
+                        prompt.style.color = "#00ff64";
+                    }
 
                     let orden = textoEscuchado.replace("jarvis", "").trim();
                     if (orden === "") orden = "iniciar jarvis";
+
+                    hablarCelular(`Entendido, ejecutando ${orden}`);
 
                     fetch(`${API_URL}/actualizar_estado`, {
                         method: 'POST',
@@ -618,7 +656,6 @@
             };
 
             rec.onerror = (e) => {
-                console.log("Error de reconocimiento:", e);
                 setTimeout(() => {
                     if (escuchaActiva) { try { rec.start(); } catch(err) {} }
                 }, 1000);
@@ -626,22 +663,26 @@
         }
 
         function triggerMic() {
+            hablarCelular("Jarvis conectado y escuchando");
             if (rec) {
                 escuchaActiva = true;
                 try {
                     rec.start();
-                } catch(e) {
-                    console.log("El micrófono ya está activo");
-                }
+                } catch(e) {}
             } else {
-                document.getElementById('status-prompt').innerText = "Voz no soportada en navegador";
+                const prompt = document.getElementById('status-prompt');
+                if (prompt) prompt.innerText = "Voz no soportada en navegador";
             }
         }
 
         function abrirModulo(nombreModulo) {
             const prompt = document.getElementById('status-prompt');
-            prompt.innerText = `Ejecutando: ${nombreModulo}...`;
-            prompt.style.color = "#00ff64";
+            if (prompt) {
+                prompt.innerText = `Ejecutando: ${nombreModulo}...`;
+                prompt.style.color = "#00ff64";
+            }
+
+            hablarCelular(`Abriendo módulo ${nombreModulo}`);
 
             fetch(`${API_URL}/actualizar_estado`, {
                 method: 'POST',
@@ -657,8 +698,12 @@
         function cambiarTab(elemento, nombreTab) {
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
             elemento.classList.add('active');
-            document.getElementById('status-prompt').innerText = `Vista: ${nombreTab}`;
-            document.getElementById('status-prompt').style.color = "#00f0ff";
+            const prompt = document.getElementById('status-prompt');
+            if (prompt) {
+                prompt.innerText = `Vista: ${nombreTab}`;
+                prompt.style.color = "#00f0ff";
+            }
+            hablarCelular(`Vista ${nombreTab}`);
         }
 
         async function sincronizarAPI() {
@@ -667,17 +712,19 @@
                 if (res.ok) {
                     const data = await res.json();
                     if(data.tarea_actual && data.tarea_actual !== "Sin tareas activas en PC") {
-                        document.getElementById('status-prompt').innerText = `PC: ${data.tarea_actual} (${data.progreso}%)`;
+                        const prompt = document.getElementById('status-prompt');
+                        if (prompt) prompt.innerText = `PC: ${data.tarea_actual} (${data.progreso}%)`;
+                        
+                        if(data.progreso === 100 && data.tarea_actual !== ultimaTareaHablada) {
+                            ultimaTareaHablada = data.tarea_actual;
+                            hablarCelular(data.tarea_actual);
+                        }
                     }
                 }
             } catch (e) {}
         }
 
         setInterval(sincronizarAPI, 2500);
-
-        window.onload = () => {
-            setTimeout(triggerMic, 1000);
-        };
     </script>
 </body>
 </html>
