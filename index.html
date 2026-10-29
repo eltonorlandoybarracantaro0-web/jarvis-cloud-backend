@@ -159,11 +159,11 @@
         .node-title { color: var(--cyan); font-weight: 700; font-size: 0.52rem; }
         .node-value { color: #ffffff; font-weight: bold; margin-top: 1px; }
 
-        /* Reactor Central */
+        /* Reactor Central y Esfera Principal */
         .hud-container {
             position: relative;
-            width: 280px !important;
-            height: 280px !important;
+            width: 290px !important;
+            height: 290px !important;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -172,177 +172,182 @@
 
         .outer-ring {
             position: absolute;
-            width: 270px !important;
-            height: 270px !important;
+            width: 280px !important;
+            height: 280px !important;
             border-radius: 50%;
             border: 2px solid transparent;
-            border-top: 3px solid var(--cyan);
-            border-bottom: 3px solid var(--cyan);
-            box-shadow: 0 0 25px rgba(0, 240, 255, 0.5);
+            border-top: 3.5px solid var(--cyan);
+            border-bottom: 3.5px solid var(--cyan);
+            box-shadow: 0 0 28px rgba(0, 240, 255, 0.55);
             animation: rotateClockwise 12s linear infinite;
         }
 
         .dashed-ring {
             position: absolute;
-            width: 220px !important;
-            height: 220px !important;
+            width: 230px !important;
+            height: 230px !important;
             border-radius: 50%;
-            border: 2px dashed rgba(0, 240, 255, 0.6);
+            border: 2.5px dashed rgba(0, 240, 255, 0.65);
             animation: rotateCounter 18s linear infinite;
         }
 
         .inner-glow-ring {
             position: absolute;
-            width: 170px !important;
-            height: 170px !important;
+            width: 180px !important;
+            height: 180px !important;
             border-radius: 50%;
-            border: 3px solid var(--cyan);
-            box-shadow: 0 0 30px var(--cyan), inset 0 0 18px var(--cyan);
+            border: 3.5px solid var(--cyan);
+            box-shadow: 0 0 32px var(--cyan), inset 0 0 20px var(--cyan);
         }
 
         .globe-core {
             position: absolute;
-            width: 135px !important;
-            height: 135px !important;
+            width: 145px !important;
+            height: 145px !important;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(0, 240, 255, 0.35) 0%, rgba(0, 102, 255, 0.85) 75%, transparent 100%);
+            background: radial-gradient(circle, rgba(0, 240, 255, 0.4) 0%, rgba(0, 102, 255, 0.9) 75%, transparent 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 0 35px var(--blue);
+            box-shadow: 0 0 40px var(--blue);
         }
 
         .core-title {
-            font-size: 1.5rem !important;
+            font-size: 1.6rem !important;
             font-weight: 900;
             color: #ffffff;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px var(--cyan);
+            letter-spacing: 2.5px;
+            text-shadow: 0 0 12px var(--cyan);
         }
 
         .core-sub {
-            font-size: 0.8rem !important;
+            font-size: 0.85rem !important;
             font-weight: 800;
             color: var(--cyan);
-            letter-spacing: 1px;
+            letter-spacing: 1.2px;
         }
 
-        /* Voice Control */
+        /* Control de Voz y Botón de Micrófono Agrandados */
         .mic-section {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 18px !important;
-            margin-top: 8px !important;
+            gap: 20px !important;
+            margin-top: 10px !important;
         }
 
         .equalizer {
             display: flex;
             align-items: center;
             gap: 4px;
-            height: 24px !important;
+            height: 28px !important;
         }
 
         .bar {
-            width: 4px !important;
+            width: 4.5px !important;
             background: var(--cyan);
             border-radius: 2px;
-            box-shadow: 0 0 8px var(--cyan);
+            box-shadow: 0 0 10px var(--cyan);
             animation: wave 1.2s ease-in-out infinite alternate;
         }
 
-        .bar:nth-child(1) { height: 10px; animation-delay: 0.1s; }
-        .bar:nth-child(2) { height: 18px; animation-delay: 0.3s; }
-        .bar:nth-child(3) { height: 24px; animation-delay: 0.5s; }
-        .bar:nth-child(4) { height: 12px; animation-delay: 0.2s; }
-        .bar:nth-child(5) { height: 20px; animation-delay: 0.4s; }
+        .bar:nth-child(1) { height: 12px; animation-delay: 0.1s; }
+        .bar:nth-child(2) { height: 20px; animation-delay: 0.3s; }
+        .bar:nth-child(3) { height: 28px; animation-delay: 0.5s; }
+        .bar:nth-child(4) { height: 14px; animation-delay: 0.2s; }
+        .bar:nth-child(5) { height: 22px; animation-delay: 0.4s; }
 
         .mic-center-btn {
-            width: 58px !important;
-            height: 58px !important;
+            width: 64px !important;
+            height: 64px !important;
             border-radius: 50%;
             background: radial-gradient(circle, var(--cyan) 0%, var(--blue) 100%);
-            border: 2px solid #ffffff;
-            box-shadow: 0 0 22px var(--cyan);
+            border: 2.5px solid #ffffff;
+            box-shadow: 0 0 25px var(--cyan);
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
         }
 
+        .mic-center-btn svg {
+            width: 32px !important;
+            height: 32px !important;
+        }
+
         .prompt-sub {
             text-align: center;
-            font-size: 0.78rem !important;
+            font-size: 0.82rem !important;
             color: var(--text-dim);
             margin-top: 6px;
             margin-bottom: 6px;
         }
 
-        /* CUADRÍCULA DE 8 MÓDULOS DE LA FOTO */
+        /* Cuadrícula de 8 Módulos - Iconos SVG Gigantes */
         .modules-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             grid-template-rows: repeat(2, auto);
-            gap: 8px;
+            gap: 10px;
             width: 100%;
-            padding: 4px 0;
-            margin-bottom: 2px;
+            padding: 6px 0;
+            margin-bottom: 4px;
         }
 
         .module-card {
             background: rgba(3, 12, 28, 0.88);
-            border: 1px solid rgba(0, 240, 255, 0.3);
+            border: 1px solid rgba(0, 240, 255, 0.35);
             border-radius: 14px;
-            padding: 14px 6px !important;
+            padding: 12px 4px !important;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
             cursor: pointer;
-            box-shadow: 0 0 12px rgba(0, 240, 255, 0.1);
+            box-shadow: 0 0 14px rgba(0, 240, 255, 0.12);
             transition: transform 0.15s ease, border-color 0.15s ease;
         }
 
         .module-card:active {
             transform: scale(0.94);
             border-color: #00f0ff;
-            background: rgba(0, 240, 255, 0.2);
+            background: rgba(0, 240, 255, 0.25);
         }
 
         .module-svg {
-            width: 30px !important;
-            height: 30px !important;
+            width: 36px !important;
+            height: 36px !important;
             fill: none;
             stroke: #00f0ff;
-            stroke-width: 2;
+            stroke-width: 2.2;
             stroke-linecap: round;
             stroke-linejoin: round;
             margin-bottom: 6px;
-            filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.7));
+            filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.8));
         }
 
         .module-title {
-            font-size: 0.82rem !important;
-            font-weight: 700;
+            font-size: 0.85rem !important;
+            font-weight: 800;
             color: #ffffff;
-            letter-spacing: 0.4px;
+            letter-spacing: 0.5px;
         }
 
         .module-desc {
-            font-size: 0.58rem !important;
+            font-size: 0.6rem !important;
             color: #6c8ea8;
             margin-top: 3px;
             line-height: 1.1;
         }
 
-        /* BARRA INFERIOR EXACTA A LA FOTO */
+        /* Barra Inferior de Navegación Agrandada */
         .bottom-nav {
             width: 100%;
-            height: 56px !important;
+            height: 60px !important;
             background: rgba(2, 7, 18, 0.95);
-            border: 1px solid rgba(0, 240, 255, 0.25);
+            border: 1px solid rgba(0, 240, 255, 0.3);
             border-radius: 16px;
             display: flex;
             justify-content: space-around;
@@ -360,21 +365,21 @@
         }
 
         .nav-svg {
-            width: 26px !important;
-            height: 26px !important;
+            width: 30px !important;
+            height: 30px !important;
             fill: none;
             stroke: #527394;
-            stroke-width: 2;
+            stroke-width: 2.2;
             stroke-linecap: round;
             stroke-linejoin: round;
         }
 
         .nav-item.active .nav-svg {
             stroke: #00f0ff;
-            filter: drop-shadow(0 0 6px #00f0ff);
+            filter: drop-shadow(0 0 8px #00f0ff);
         }
 
-        /* Modal Overlay Styles */
+        /* Modales de Vistas */
         .jarvis-modal {
             display: none;
             position: fixed;
@@ -383,7 +388,6 @@
             padding: 20px; overflow-y: auto; flex-direction: column;
             border: 1px solid rgba(0, 240, 255, 0.4);
         }
-        .jarvis-modal.active { display: flex; }
         .jarvis-modal.active { display: flex; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(0,240,255,0.3); padding-bottom: 10px; }
         .modal-header h3 { color: #00f0ff; font-size: 1.1rem; }
