@@ -615,32 +615,47 @@
         let ultimaTareaHablada = "";
 
         // SÍNTESIS DE VOZ
-        function hablarCelular(texto) {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-                const ut = new SpeechSynthesisUtterance(texto);
-                ut.lang = 'es-ES';
-                ut.rate = 1.0;
-                ut.pitch = 1.0;
-                window.speechSynthesis.speak(ut);
-            }
+        // SÍNTESIS DE VOZ CONTROLADA (Evita bucles)
+function hablarCelular(texto) {
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+
+        // Pausar micrófono mientras habla
+        if (rec && escuchaActiva) {
+            try { rec.abort(); } catch(e) {}
         }
 
-        // CONTROL DE VISTAS Y MODALES
-        function abrirVista(idModal, mensajeVoz) {
-            document.querySelectorAll('.jarvis-modal').forEach(m => m.classList.remove('active'));
-            const modal = document.getElementById(idModal);
-            if (modal) {
-                modal.classList.add('active');
-                if (mensajeVoz) hablarCelular(mensajeVoz);
-            }
+        const ut = new SpeechSynthesisUtterance(texto);
+        ut.lang = 'es-ES';
+        ut.rate = 1.0;
+        ut.pitch = 1.0;
 
-            if (idModal === 'modal-musica') {
-                setTimeout(() => {
-                    window.open('https://www.youtube.com', '_blank');
-                }, 2200);
+        // Reanudar micrófono al terminar de hablar
+        ut.onend = () => {
+            if (escuchaActiva && rec) {
+                try { rec.start(); } catch(e) {}
             }
-        }
+        };
+
+        window.speechSynthesis.speak(ut);
+    }
+}
+
+// CONTROL DE VISTAS Y MODALES
+function abrirVista(idModal, mensajeVoz) {
+    document.querySelectorAll('.jarvis-modal').forEach(m => m.classList.remove('active'));
+    const modal = document.getElementById(idModal);
+    if (modal) {
+        modal.classList.add('active');
+        if (mensajeVoz) hablarCelular(mensajeVoz);
+    }
+
+    if (idModal === 'modal-musica') {
+        setTimeout(() => {
+            window.open('https://www.youtube.com', '_blank');
+        }, 2200);
+    }
+}
 
         function cerrarVista() {
             document.querySelectorAll('.jarvis-modal').forEach(m => m.classList.remove('active'));
