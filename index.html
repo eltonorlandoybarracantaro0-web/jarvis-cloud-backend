@@ -551,6 +551,13 @@
     </div>
 </div>
 
+    <div class="module-card" onclick="abrirVista('modal-configuracion', 'Abriendo herramientas adicionales')">
+        <svg class="module-svg" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        <div class="module-title">Más</div>
+        <div class="module-desc">Herramientas</div>
+    </div>
+</div>
+
         <!-- Bottom Navigation -->
         <div class="bottom-nav">
             <div class="nav-item active" onclick="cambiarTab(this, 'Inicio')">
@@ -647,38 +654,70 @@
             };
 
             rec.onresult = (event) => {
-                const totalResultados = event.results.length;
-                const textoEscuchado = event.results[totalResultados - 1][0].transcript.toLowerCase().trim();
-                console.log("Texto detectado:", textoEscuchado);
+    const totalResultados = event.results.length;
+    const textoEscuchado = event.results[totalResultados - 1][0].transcript.toLowerCase().trim();
+    console.log("Texto detectado:", textoEscuchado);
 
-                // EVALUACIÓN DE PALABRA CLAVE "JARVIS"
-                if (textoEscuchado.includes("jarvis")) {
-                    const prompt = document.getElementById('status-prompt');
-                    if (prompt) {
-                        prompt.innerText = `Procesando: "${textoEscuchado}"...`;
-                        prompt.style.color = "#00ff64";
-                    }
+    let orden = textoEscuchado.replace("jarvis", "").trim();
+    if (orden === "") orden = textoEscuchado;
 
-                    let orden = textoEscuchado.replace("jarvis", "").trim();
+    const prompt = document.getElementById('status-prompt');
+    if (prompt) {
+        prompt.innerText = `Procesando: "${orden}"...`;
+        prompt.style.color = "#00ff64";
+    }
 
-                    // CASO A: ENVIAR A LA PC SI CONTIENE FRASES EXPLÍCITAS DE LAPTOP
-                    if (orden.includes("mark 3") || orden.includes("mack 3") || orden.includes("en la pc")) {
-                        let ordenPC = orden.replace("mark 3", "").replace("mack 3", "").replace("en la pc", "").trim();
-                        if (ordenPC === "") ordenPC = "iniciar jarvis";
+    // ÓRDENES EXPLÍCITAS DE PC
+    if (orden.includes("mark 3") || orden.includes("mack 3") || orden.includes("en la pc")) {
+        let ordenPC = orden.replace("mark 3", "").replace("mack 3", "").replace("en la pc", "").trim();
+        if (ordenPC === "") ordenPC = "iniciar jarvis";
 
-                        hablarCelular(`Enviando a la PC: ${ordenPC}`);
+        hablarCelular(`Enviando a la PC: ${ordenPC}`);
 
-                        fetch(`${API_URL}/actualizar_estado`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                tarea_actual: `Procesando en PC: ${ordenPC}`,
-                                progreso: 50,
-                                comando_pendiente: ordenPC
-                            })
-                        }).catch(err => console.log(err));
-                        return;
-                    }
+        fetch(`${API_URL}/actualizar_estado`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                tarea_actual: `Procesando en PC: ${ordenPC}`,
+                progreso: 50,
+                comando_pendiente: ordenPC
+            })
+        }).catch(err => console.log(err));
+        return;
+    }
+
+    // MODALES Y ACCIONES LOCALES
+    if (orden.includes("clima")) abrirVista('modal-clima', 'Mostrando el pronóstico del clima');
+    else if (orden.includes("navegación") || orden.includes("mapa")) abrirVista('modal-navegacion', 'Abriendo mapa y rutas');
+    else if (orden.includes("música") || orden.includes("youtube")) abrirVista('modal-musica', 'Iniciando reproducción de música');
+    else if (orden.includes("hogar") || orden.includes("dispositivos")) abrirVista('modal-hogar', 'Abriendo control del hogar');
+    else if (orden.includes("configuración") || orden.includes("sistema")) abrirVista('modal-sistema', 'Desplegando ajustes del sistema');
+    else if (orden.includes("aplicaciones") || orden.includes("apps")) abrirVista('modal-sistema', 'Desplegando aplicaciones');
+    else if (orden.includes("cerrar") || orden.includes("inicio")) cerrarVista();
+    else {
+        // CONSULTA A GEMINI IA
+        fetch(`${API_URL}/actualizar_estado`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                tarea_actual: `Pregunta IA: ${orden}`,
+                progreso: 50,
+                comando_pendiente: orden
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            let respuesta = data.estado ? data.estado.respuesta_jarvis : null;
+            if (respuesta) {
+                hablarCelular(respuesta);
+                if (prompt) prompt.innerText = `Jarvis: "${respuesta}"`;
+            }
+        })
+        .catch(err => {
+            hablarCelular("No pude conectarme con el servidor central, Señor.");
+        });
+    }
+};
 
                     // CASO B: ÓRDENES LOCALES O LLAMADAS EN EL CELULAR
                     let ordenLimpia = orden.toLowerCase();
