@@ -728,6 +728,26 @@
         }
 
         setInterval(sincronizarAPI, 2500);
+
+    // Saludo de inicio al cargar la página / interacción inicial
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                hablarCelular("Sistemas en línea. Jarvis Mark 3 listo para sus órdenes, Jefe.");
+            }, 1000);
+        });
+
+        function triggerMic() {
+            hablarCelular("Jarvis conectado y escuchando, dígame Jefe");
+            if (rec) {
+                escuchaActiva = true;
+                try {
+                    rec.start();
+                } catch(e) {}
+            } else {
+                const prompt = document.getElementById('status-prompt');
+                if (prompt) prompt.innerText = "Voz no soportada en navegador";
+            }
+        }
     </script>
 </body>
 </html>
