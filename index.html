@@ -404,6 +404,7 @@
             padding: 0;
         }
 
+        /* 1. Marco adaptable sin desbordamiento */
         .phone-frame {
             width: 100%;
             max-width: 480px;
@@ -411,16 +412,47 @@
             background-color: #020813;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start !important; /* Agrupa todo hacia arriba sin huecos raros */
-            align-items: center;
-            padding: 8px 10px 52px 10px;
+            justify-content: space-between !important;
+            padding: 12px 10px 52px 10px !important;
             position: relative;
-            overflow: hidden;
+            overflow: hidden !important;
             background-image: 
                 radial-gradient(circle at 50% 35%, rgba(0, 102, 255, 0.25) 0%, transparent 70%),
                 linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
             background-size: 100% 100%, 20px 20px, 20px 20px;
+        }
+
+        /* 2. Encabezado en posición alta limpia */
+        .top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 100%;
+            z-index: 5;
+            margin-top: 5px !important;
+        }
+
+        /* 3. Reactor centrado perfectamente en el bloque medio */
+        .center-hud-section {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin: auto 0 !important; /* Centra la esfera exactamente en el espacio disponible */
+        }
+
+        /* 4. Módulos apoyados en el borde inferior */
+        .modules-grid {
+            display: grid !important;
+            grid-template-columns: repeat(4, 1fr) !important;
+            grid-template-rows: repeat(2, auto) !important;
+            gap: 6px !important;
+            width: 100% !important;
+            margin-top: 0 !important;
+            margin-bottom: 2px !important;
+            padding: 0 !important;
         }
 
         .top-row {
